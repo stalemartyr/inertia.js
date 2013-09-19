@@ -7,7 +7,6 @@ Demo
 ====
 1. https://dl.dropboxusercontent.com/u/15594195/inertia.v1.19/index.html#0 <br/>
 2. https://dl.dropboxusercontent.com/u/15594195/inertia.v.19.sample/index.html#0
-3. 
 
 Basic
 =====
