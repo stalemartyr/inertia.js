@@ -1,3 +1,5 @@
+
+<img src='https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-prn1/1238304_707747342572228_1178345847_n.jpg' width='100%'>
 inertia.js
 ==========
 
@@ -35,3 +37,5 @@ inertia.default.css and inertia.custom.css are the key ingredient for themes :-)
 
 ```
 presentation-view tag handles the 3d state of each slides
+
+for questions and suggestions..email me at jimbertamante@gmail.com
