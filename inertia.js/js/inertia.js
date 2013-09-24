@@ -8,7 +8,7 @@
 
 /*************************************************************
  * hi! this is my first open-source software so please
- * bear with it...i know their are bugs and a lot
+ * bear with it...i know there are bugs and a lot
  * of rooms for improvements but dont worry...this is a
  * working beta version and it is easy to use because
  * (by default) it is packed with transitions/effects that
@@ -291,9 +291,10 @@ var inertiaObject = {
 	insertFirstSlide = function(){
 			var browserInfo		=		navigator.userAgent;
 			var mybrowser		=		browserInfo.match(/Firefox/) == "Firefox" ? "Gecko" : browserInfo.match(/Chrome/) == "Chrome" ? "Webkit" : browserInfo.match(/Opera/) == "Opera" ? "Webkit" : "What is it?";
+			var storage 		=		typeof(Storage)!=="undefined" ? "Local Storage is supported" : "Local Storage is not supported";
 			var myinfo			=		document.createElement("slide");
 			var parent			=		__util.Tget("presentation-view")[0];
-			var content			=		["<div id='inertia-myinfo'>","<div class='inertia-slide-info'><div class='inertia-round'></div> You are using "+mybrowser+" browser</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> We're on a "+navigator.platform+" platform</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Use <div class='inertia-key'>></div> or <div class='inertia-key'><</div> arrow keys for navigation.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> You can also press <div class='inertia-key'>T</div> for tools.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> To highlight just press <div class='inertia-key'>H</div>.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Click to zoom.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> If your platform supports Extended Desktop you may want to use a Presenter's View...just press <div class='inertia-key'>P</div></div>","</div>"].join(""); 
+			var content			=		["<div id='inertia-myinfo'>","<div class='inertia-slide-info'><div class='inertia-round'></div> You are using "+mybrowser+" browser</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> We're on a "+navigator.platform+" platform</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> "+storage+"</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Use <div class='inertia-key'>></div> or <div class='inertia-key'><</div> arrow keys for navigation.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> You can also press <div class='inertia-key'>T</div> for tools.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> To highlight just press <div class='inertia-key'>H</div>.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Click to zoom.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> If your platform supports Extended Desktop you may want to use a Presenter's View...just press <div class='inertia-key'>P</div></div>","</div>"].join(""); 
 			myinfo.innerHTML = content;
 			parent.insertBefore(myinfo,__util.Tget("slide")[0]);
 			
@@ -318,7 +319,7 @@ var inertiaObject = {
 				mykey[count].setAttribute("style","border-radius:10%;background:f3f3f3;color:gray;display:inline-block;box-shadow:0px 1px 3px #000;padding:10px;");
 			}
 	};
-
+		
 window.onload = function()
 {
 	var myurl = document.URL;
@@ -342,16 +343,46 @@ window.onload = function()
 		insertEndSlide();
 		//initialize the canvas
 		var canvas = new canvasConfig();
+		//initialize canvas
 		canvas.canvasInit(); 
+		//set aspect ratio
 		canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+		//initialize css
 		canvas.initializeCSS();
 		
 		var engine = new inertia();
 		engine.load();
-			
+		
+		//INITIALIZE ZOOM.
 		var zoomElem = new inertiaZoom();
 		zoomElem.init();
+		
+		// DETERMINE IF A USER TRIGGERED A PRESENTER'S VIEW
+		// I NOTICED THAT WHEN THE USER CALLS A PRESENTERS VIEW
+		// AND THE MAIN WINDOW WAS REFRESHED...THE SYNCRONIZATION FAILED
+		// SO USING SESSIONSTORAGE I CAN DETERMINE WHETHER IT IS
+		// EXISTING OR NOT...COOKIES ARE NOT AVAILABLE IF YOU ARE NOT
+		// USING A WEB SERVER...OUCH!
+		
+		if(sessionStorage.presenter == "true"){
+			try{
+				
+			// OPEN PRESENTATION
+			__util.presenter();
+			
+			// CALL CHILD WINDOW'S FUNCTIONS
+			myPresenterview.checkSlide(inertiaObject.mycurrentselection);
+			
+			myPresenterview.dummySlide(inertiaObject.mycurrentselection);
+			
+			}catch(e){
+					alert(e);
+			}
+		}
+		
 	}
+	
+
 
 };
 
@@ -531,6 +562,7 @@ canvasConfig.prototype = {
 		setTimeout(function(){
 			createPresenter();
 			setSize();
+			setUnreload();
 			
 			var myURL = document.URL;
 			var myslide = myURL.split("#");
@@ -557,9 +589,14 @@ canvasConfig.prototype = {
 		window.onresize = function()
 		{
 			setSize();
-			
 		}
 		
+		window.onbeforeunload = function () {
+			opener.sessionStorage.presenter = "false"; 
+		};
+		
+		var setUnreload = function(){
+		}
 
 		
 		var setSize = function()
@@ -581,36 +618,6 @@ canvasConfig.prototype = {
 				canvas.aspectRatio(myhost,mycontent);
 		}
 		
-		var checkSlide = function(n){
-			
-			var mycanvas	=		__util.Tget(inertiaObject.tags[3]);
-			for(var cnvs = 0;cnvs < mycanvas.length;cnvs++)
-			{
-				
-				if(mycanvas[cnvs].id == n)
-				{
-					checkNote(mycanvas[cnvs]);
-					mycanvas[cnvs].style.border = "solid orange 10px";
-				}else
-				{
-					mycanvas[cnvs].style.border = "none";
-				}
-			}
-			
-		}
-		
-
-		
-		var checkNote = function(target){
-			var mynote			=		target.getElementsByTagName("note");
-			var txtnote			=		__util.get("#inertia-mynote");
-			if(typeof mynote[0] !== "undefined")
-			{
-				txtnote.innerHTML			=			mynote[0].innerHTML;
-			}else{
-				txtnote.innerHTML			=			"";
-			}
-		}
 		
 	}
 };
@@ -640,6 +647,35 @@ var createPresenter = function(){
 	
 }
 
+var checkNote = canvasConfig.prototype.presentersView.checkNote = function(target){
+	var mynote			=		target.getElementsByTagName("note");
+	var txtnote			=		__util.get("#inertia-mynote");
+	if(typeof mynote[0] !== "undefined")
+	{
+		txtnote.innerHTML			=			mynote[0].innerHTML;
+	}else{
+		txtnote.innerHTML			=			"";
+	}
+}
+
+var checkSlide =  canvasConfig.prototype.presentersView.checkSlide = function(n){
+	
+	var mycanvas	=	__util.Tget(inertiaObject.tags[3]);
+	for(var cnvs = 0;cnvs < mycanvas.length;cnvs++)
+	{
+		
+		if(mycanvas[cnvs].id == n)
+		{
+			checkNote(mycanvas[cnvs]);
+			mycanvas[cnvs].style.border = "solid orange 10px";
+		}else
+		{
+			mycanvas[cnvs].style.border = "none";
+		}
+	}
+	
+}
+		
 var dummySlide = canvasConfig.prototype.presentersView.checkDummySlide = function(dummy){
 	
 	var targetDummy						=		__util.get("#inertia-viewer");
@@ -778,6 +814,7 @@ inertia.prototype = {
 
 			}
 			
+			
 			window.addEventListener("keyup",function(e){
 				if(e.keyCode == 39){
 				next();
@@ -790,6 +827,7 @@ inertia.prototype = {
 					__util.tool();
 				}else if(e.keyCode == 80){
 					//call for presenter's view
+					sessionStorage.presenter = "true"; 
 					__util.presenter();
 				}else{
 					
@@ -996,7 +1034,8 @@ var __util = {
 	},
 	//added alpha 2
 	presenter : function(){
-		myPresenterview = window.open(document.URL,"inertia.js : Presenter's View","width=200,height=200");
+		myPresenterview = window.open(document.URL,"inertia.js : Presenter's View","width="+window.innerWidth+",height="+window.innerHeight);
+		return myPresenterview;
 	}
 }
 
