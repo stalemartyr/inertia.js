@@ -1,7 +1,7 @@
 /*************************************************************
 *	Software 			: 		Inertia OpenSlide Library
 *	Created by 			: 		Jim-Bert Amante
-*	Licenced under			: 		MIT
+*	Licenced under		: 		none so far
 *	Copyright			:		2013
 *
 **************************************************************/
@@ -21,6 +21,7 @@
  * Special thanks to my gf for inspiration :-)
  *
  *************************************************************/
+
 // aha! you are interested on how this software work!
 // thats...cool? hehe..
 var inertiaObject = {
@@ -48,8 +49,18 @@ var inertiaObject = {
 			reStacker : null,
 			//global for triggering autoplayer
 			autoPlayer : null,
+			//tools in the slide
+			showTool : false,
+			//PRESENTERS VIEW PORTION
+			presentersView : false,
 			
-			showTool : false
+			dummySelected : 0,
+			
+			myPresenterview : false,
+			
+			
+			
+			
 
 	},
 	
@@ -160,7 +171,16 @@ var inertiaObject = {
 					inertiaObject.mycurrentselection = mynext;
 					window.location = "#" + mynext;
 					
+
+					
 				}
+				
+				try{
+					myPresenterview.mysync(inertiaObject.mycurrentselection,inertiaObject.animatestart);
+				}catch(e){
+					//__util.presenter();
+				}
+				
 			}else{
 				alert("End of Slide. Thank you!");
 			}
@@ -181,6 +201,7 @@ var inertiaObject = {
 					
 					inertiaObject.mycurrentselection = mynext;
 					window.location = "#" + mynext;
+					
 			}	
 			
 	},
@@ -258,38 +279,89 @@ var inertiaObject = {
 				}
 			}
 		//	var listChild = myparent.getElementsBy
-	},insertEndSlide = function(){
+	},
+	insertEndSlide = function(){
 			var parent		=		__util.Tget(inertiaObject.tags[1])[0];
 			var end			=		document.createElement("slide");
 			end.innerHTML	=		"<div style='color:#FFF;font-family:arial;text-align:center'>End of Presentation</div><div class='backgroundImage inertia-ending-slide' imgsrc='./backgrounds/b.jpg' imgin='fadeinout'></div>";
 			end.setAttribute("showpane","false");
 			parent.appendChild(end);
 	
+	},
+	insertFirstSlide = function(){
+			var browserInfo		=		navigator.userAgent;
+			var mybrowser		=		browserInfo.match(/Firefox/) == "Firefox" ? "Gecko" : browserInfo.match(/Chrome/) == "Chrome" ? "Webkit" : browserInfo.match(/Opera/) == "Opera" ? "Webkit" : "What is it?";
+			var myinfo			=		document.createElement("slide");
+			var parent			=		__util.Tget("presentation-view")[0];
+			var content			=		["<div id='inertia-myinfo'>","<div class='inertia-slide-info'><div class='inertia-round'></div> You are using "+mybrowser+" browser</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> We're on a "+navigator.platform+" platform</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Use <div class='inertia-key'>></div> or <div class='inertia-key'><</div> arrow keys for navigation.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> You can also press <div class='inertia-key'>T</div> for tools.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> To highlight just press <div class='inertia-key'>H</div>.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> Click to zoom.</div>","<div class='inertia-slide-info'><div class='inertia-round'></div> If your platform supports Extended Desktop you may want to use a Presenter's View...just press <div class='inertia-key'>P</div></div>","</div>"].join(""); 
+			myinfo.innerHTML = content;
+			parent.insertBefore(myinfo,__util.Tget("slide")[0]);
+			
+			var main = __util.get("#inertia-myinfo");
+			main.setAttribute("style","margin:30px;");
+			
+			var mysub = main.getElementsByClassName("inertia-slide-info");
+			for(var count = 0;count < mysub.length;count++)
+			{
+				mysub[count].setAttribute("style","margin:10px;font-size:40px;color:#424242;font-family:arial;");
+			}
+			
+			var myround = main.getElementsByClassName("inertia-round");
+			for(var count = 0;count < myround.length;count++)
+			{
+				myround[count].setAttribute("style","border-radius:50%;border:solid #FFF 5px;width:10px;height:10px;background:yellowgreen;display:inline-block;box-shadow:0px 1px 3px #000;");
+			}
+			
+			var mykey = main.getElementsByClassName("inertia-key");
+			for(var count = 0;count < mykey.length;count++)
+			{
+				mykey[count].setAttribute("style","border-radius:10%;background:f3f3f3;color:gray;display:inline-block;box-shadow:0px 1px 3px #000;padding:10px;");
+			}
 	};
 
 window.onload = function()
 {
-	//inject the toolbar --> press 't' to show
-	inertiaTool();
-	//insert end slide
-	insertEndSlide();
-	//initialize the canvas
+	var myurl = document.URL;
 	var canvas = new canvasConfig();
-	canvas.canvasInit(); 
-	canvas.aspectRatio();
-	canvas.initializeCSS();
 	
-	var engine = new inertia();
-	engine.load();
+	if(window.opener != null){
+		canvas.presentersView();
+		inertiaObject.presentersView = true;
+	}else{
+		//inject the toolbar --> press 't' to show
+		if ( window.self === window.top )
+		{ 
+		}else{
+			console.log("i am on an i frame");
+		}
 		
-	var zoomElem = new inertiaZoom();
-	zoomElem.init();
-	
+		inertiaTool();
+		//insert first slide
+		insertFirstSlide();
+		//insert end slide
+		insertEndSlide();
+		//initialize the canvas
+		var canvas = new canvasConfig();
+		canvas.canvasInit(); 
+		canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+		canvas.initializeCSS();
+		
+		var engine = new inertia();
+		engine.load();
+			
+		var zoomElem = new inertiaZoom();
+		zoomElem.init();
+	}
+
 };
 
 window.onresize = function(){
-	var canvas = new canvasConfig();
-	canvas.aspectRatio();
+	if(!inertiaObject.presentersView){
+		var canvas = new canvasConfig();
+		canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+	}else{
+	
+	}
 };
 
 canvasConfig.prototype = {
@@ -309,6 +381,7 @@ canvasConfig.prototype = {
 			mycanvas[starter].style.zIndex		=		"-10";
 			mycanvas[starter].style.opacity		= 		"0";
 			mycanvas[starter].style.display		=		"none";
+			mycanvas[starter].style.position		=		"fixed";
 			__x(mycanvas[starter],"perspective","1200px");
 			
 			var bg = document.createElement("slide-background");
@@ -330,64 +403,62 @@ canvasConfig.prototype = {
 		
 		
 	},
-	aspectRatio : function()
+	aspectRatio : function(myhost,target)
 	{
-			var mytarget = __util.Tget(inertiaObject.tags[3]);
+			var mytarget = target;
+			var windowheight = typeof myhost.innerHeight !== "undefined" ? parseInt(myhost.innerHeight) : parseInt(myhost.clientHeight);
+			var windowwidth = typeof myhost.innerWidth !== "undefined" ? parseInt(myhost.innerWidth) : parseInt(myhost.clientWidth);
+			var endCount = typeof mytarget.length !== "undefined" ? parseInt(mytarget.length) : 1;
 			
-			for(var start = 0; start < mytarget.length;start++){
-				
-				var myheight = this.canvasHeight;
-				var mywidth = this.canvasWide;
-				var windowheight = parseInt(window.innerHeight);
-				var windowwidth = parseInt(window.innerWidth);
+			for(var start = 0; start < endCount;start++){
+				var toFit = typeof mytarget[start] !== "undefined" ? mytarget[start] : mytarget;
+				var myheight = parseInt(toFit.style.height);
+				var mywidth = parseInt(toFit.style.width);
 				
 				var mytop = (windowheight / 2) - (this.canvasHeight / 2);
 				var myleft = (windowwidth / 2) - (this.canvasWide / 2);
-				//globals
-				myDefaultLeft = myleft;
-				myDefaultTop = mytop;
 				
-				mytarget[start].style.position = "fixed";
-				mytarget[start].style.top = mytop+"px";
-				mytarget[start].style.left = myleft+"px";
-				mytarget[start].style.transform = ""; //reset transform
+				toFit.style.top = mytop+"px";
+				toFit.style.left = myleft+"px";
+				toFit.style.transform = ""; //reset transform
 				if(windowheight < myheight && windowwidth > mywidth){
 					var minus = myheight - windowheight;
 					var calc = (myheight - minus) / myheight;
-					mytarget[start].style.transform = "scale("+calc+")";
-					mytarget[start].style.webkitTransform = "scale("+calc+")";
+					toFit.style.transform = "scale("+calc+")";
+					toFit.style.webkitTransform = "scale("+calc+")";
 					inertiaObject.scale = calc;
-				}
-				if(windowwidth < mywidth && windowheight > myheight){
+						console.log("c1");
+				}else if(windowwidth < mywidth && windowheight > myheight){
 					var minus = mywidth - windowwidth;
 					var calc = (mywidth - minus) / mywidth;
-					mytarget[start].style.transform = "scale("+calc+")";
-					mytarget[start].style.webkitTransform = "scale("+calc+")";
+					toFit.style.transform = "scale("+calc+")";
+					toFit.style.webkitTransform = "scale("+calc+")";
 					inertiaObject.scale = calc;
-				}
-				
-				if(windowwidth < mywidth && windowheight < myheight){
+						console.log("c2");
+				}else if(windowwidth < mywidth && windowheight < myheight){
 					var diff1 = mywidth - windowwidth;
 					var diff2 = myheight - windowheight;
 					
 					if(diff1 > diff2){
 						var minus = mywidth - windowwidth;
-						var calc = (mywidth - minus) / mywidth;
-						mytarget[start].style.transform = "scale("+calc+")";
-						mytarget[start].style.webkitTransform = "scale("+calc+")";
+						var calc = (mywidth - minus) / (mywidth + 50);
+						toFit.style.transform = "scale("+calc+")";
+						toFit.style.webkitTransform = "scale("+calc+")";
 						inertiaObject.scale = calc;
-					}else{
+						console.log("c3");
+					}else if(diff1 < diff2){
 						var minus = myheight - windowheight;
-						var calc = (myheight - minus) / myheight;
-						mytarget[start].style.transform = "scale("+calc+")";
-						mytarget[start].style.webkitTransform = "scale("+calc+")";
+						var calc = (myheight - minus) / (myheight + 50);
+						toFit.style.transform = "scale("+calc+")";
+						toFit.style.webkitTransform = "scale("+calc+")";
 						inertiaObject.scale = calc;
+						console.log("c4");
 					}
 				}
 				
 				if(windowwidth > mywidth && windowheight > myheight){
-					mytarget[start].style.transform = "scale(1)";
-					mytarget[start].style.webkitTransform = "scale(1)";
+					toFit.style.transform = "scale(1)";
+					toFit.style.webkitTransform = "scale(1)";
 					inertiaObject.scale = 1;
 				}
 			}
@@ -401,19 +472,234 @@ canvasConfig.prototype = {
 		style.checkSheet("inertia-panelsheet");
 		style.checkSheet("inertia-bgsheet");
 		style.checkSheet("inertia-highlightsheet");
+	},
+	presentersView : function(){
+		var viewer			=		__util.Tget(inertiaObject.tags[1])[0] != null ? __util.Tget(inertiaObject.tags[1])[0] : alert("Incomplete HTML : You must wrap all slides in 'presentation-view'");
+		var mycanvas		=		__util.Tget(inertiaObject.tags[3]);
+		viewer.id			=		"inertia-side-panel";
+		viewer.setAttribute("style","z-index:100;position:fixed;top:0px;left:0px;height:"+window.innerHeight+"px;width:300px;background:#717582;overflow:auto;border-right:solid #000 2px;");
+	
+		for(var starter = 0; starter < mycanvas.length;starter++){
+			mycanvas[starter].setAttribute("style","height:"+this.canvasHeight+"px;width:"+this.canvasWide+"px;box-shadow:0px 2px 15px #000;display:inline-block;position:absolute;top:"+(parseInt(starter) * ((parseInt(this.canvasHeight) * 0.3) + 10))+"px;");
+			__x(mycanvas[starter],"transform","scale(0.3)");
+			__x(mycanvas[starter],"transformOrigin","1% 1%");
+			mycanvas[starter].id				=		(parseInt(starter) + 1);
+			
+			//initialize user's note if any
+			var mynote		=		mycanvas[starter].getElementsByTagName("note");
+			var mybg		=		mycanvas[starter].getAttribute("animate");
+			
+			if(typeof mybg !== "undefined" && mybg != null)
+			{
+				var mybackground = mybg.split(":");
+				if(typeof mybackground[1] !== "undefined")
+				{
+				mycanvas[starter].style.background = mybackground[1];
+				}
+			}
+			
+			if(typeof mynote[0] !== "undefined")
+			{
+				//of course we dont want our notes visible
+				mynote[0].style.display		=			"none";
+			}
+
+			mycanvas[starter].addEventListener("click",function()
+			{
+				var mynum			=		this.getAttribute("id");
+				checkNote(this);
+				//get all canvas
+				var mycanvas					=		__util.Tget(inertiaObject.tags[3]);
+				for(var cnvs = 0;cnvs < mycanvas.length;cnvs++)
+				{
+					mycanvas[cnvs].style.border = "none";
+				}
+				
+				checkSlide(mynum)
+				
+				opener.goToSlide(mynum);
+				inertiaObject.dummySelected = parseInt(mynum);
+				dummySlide(mynum);
+				
+				
+				
+			},false);
+			
+			
+		}
+		
+		setTimeout(function(){
+			createPresenter();
+			setSize();
+			
+			var myURL = document.URL;
+			var myslide = myURL.split("#");
+			
+			dummySlide((parseInt(myslide[1])));
+			checkSlide((parseInt(myslide[1])))
+		},100);
+		
+		// IT HANDLES WINDOWS EVENTS FOR NAVIGATION AND HIGHLIGHT
+		window.document.addEventListener("keyup",function(evt){
+			// NAVIGATE ONWARD
+			if(evt.keyCode == 39){ 
+				opener.next(); //control the parent
+				checkSlide(opener.inertiaObject.mycurrentselection); //control the panel
+			}else if(evt.keyCode == 37){
+			// NAVIGATE BACKWARD
+				opener.prev();
+				checkSlide(opener.inertiaObject.mycurrentselection);
+				dummySlide(opener.inertiaObject.mycurrentselection);
+			}
+		},false);
+		
+		
+		window.onresize = function()
+		{
+			setSize();
+			
+		}
+		
+
+		
+		var setSize = function()
+		{
+		
+			var blocker = document.getElementById("inertia-viewer-wrapper");
+			var viewer = document.getElementById("inertia-viewer");
+			var keynote = document.getElementById("inertia-key-note");
+			var note = document.getElementById("inertia-mynote");
+			var panel = document.getElementById("inertia-side-panel");
+			panel.setAttribute("style","z-index:100;position:fixed;top:0px;left:0px;height:"+window.innerHeight+"px;width:300px;background:#717582;overflow:auto;border-right:solid #000 2px;");
+			note.setAttribute("style","background:#FFF;height:200px;width:100%;position:absolute;bottom:0px;left:0px;overflow:auto;border:solid #000 1px;");
+			keynote.setAttribute("style","z-index:100;height:230px;width:"+(parseInt(window.innerWidth) - 300) + "px;position:fixed;bottom:0px;left:300px;background:#404353;border-top:solid #000 2px;");
+			blocker.setAttribute("style","background:rgba(0,0,0,0.2);z-index:100;position:fixed;top:0px;right:0px;width:"+(parseInt(window.innerWidth) - 300) + "px;height:"+(parseInt(window.innerHeight) - 230) + "px;box-shadow:inset 0px "+((parseInt(window.innerHeight) - 230) / 2)+"px 15px rgba(255,255,255,0.2);");
+			
+				var canvas = new canvasConfig();
+				var myhost = document.getElementById("inertia-viewer-wrapper");
+				var mycontent = document.getElementById("inertia-viewer");
+				canvas.aspectRatio(myhost,mycontent);
+		}
+		
+		var checkSlide = function(n){
+			
+			var mycanvas	=		__util.Tget(inertiaObject.tags[3]);
+			for(var cnvs = 0;cnvs < mycanvas.length;cnvs++)
+			{
+				
+				if(mycanvas[cnvs].id == n)
+				{
+					checkNote(mycanvas[cnvs]);
+					mycanvas[cnvs].style.border = "solid orange 10px";
+				}else
+				{
+					mycanvas[cnvs].style.border = "none";
+				}
+			}
+			
+		}
+		
+
+		
+		var checkNote = function(target){
+			var mynote			=		target.getElementsByTagName("note");
+			var txtnote			=		__util.get("#inertia-mynote");
+			if(typeof mynote[0] !== "undefined")
+			{
+				txtnote.innerHTML			=			mynote[0].innerHTML;
+			}else{
+				txtnote.innerHTML			=			"";
+			}
+		}
+		
 	}
 };
+
+var createPresenter = function(){
+		//create blocker...to avoid triggering events from viewer
+		var blocker = document.createElement("div");
+		blocker.id = "inertia-viewer-wrapper";
+		blocker.setAttribute("style","background:rgba(0,0,0,0.2);z-index:100;position:fixed;top:0px;right:0px;width:"+(parseInt(window.innerWidth) - 300) + "px;height:"+(parseInt(window.innerHeight) - 230) + "px;box-shadow:inset 0px "+((parseInt(window.innerHeight) - 230) / 2)+"px 15px rgba(255,255,255,0.2);");
+		document.body.appendChild(blocker);
+		
+		var myviewer = document.createElement("div");
+		myviewer.id = "inertia-viewer";
+		myviewer.setAttribute("style","background:#0099CC;z-index:100;position:absolute;top:0px;right:0px;width:900px;height:600px;box-shadow:0px 2px 15px #000;");
+		document.getElementById("inertia-viewer-wrapper").appendChild(myviewer);
+		
+		//inject html
+		var comment = document.createElement("div");
+		comment.id = "inertia-key-note";
+		comment.setAttribute("style","height:230px;width:"+(parseInt(window.innerWidth) - 300) + "px;position:fixed;bottom:0px;left:300px;background:#404353;border-top:solid #000 2px;");
+		document.body.appendChild(comment);
+		
+		var txtComment = document.createElement("div");
+		txtComment.id = "inertia-mynote";
+		txtComment.setAttribute("style","background:#FFF;height:200px;width:100%;position:absolute;bottom:0px;left:0px;overflow:auto;border:solid #000 1px;");
+		document.getElementById("inertia-key-note").appendChild(txtComment);	
+	
+}
+
+var dummySlide = canvasConfig.prototype.presentersView.checkDummySlide = function(dummy){
+	
+	var targetDummy						=		__util.get("#inertia-viewer");
+		targetDummy.innerHTML			=		__util.get("#"+dummy).innerHTML;
+		targetDummy.style.background	=		__util.get("#"+dummy).style.background;
+		
+	var resources						=		targetDummy.getElementsByClassName("resources");
+	for(var start =0; start < resources.length;start++)
+	{
+		if(typeof resources[start].getAttribute("animatein") !== "undefined")
+		{
+			resources[start].style.display = "none";
+		}
+	}
+	
+	inertiaObject.dummySelected = parseInt(dummy);
+			
+}
+
+
+
+//here
+var mysync = canvasConfig.prototype.presentersView.sync = function(slide,resources){
+		var from = __util.get("#"+slide);
+		var to = __util.get("#inertia-viewer");
+		
+		console.log(inertiaObject.dummySelected);
+		
+		if(inertiaObject.dummySelected == slide){
+			var res = to.getElementsByClassName("resources");
+			for(var start =0;start < res.length;start++)
+			{
+				if(typeof res[start].getAttribute("animatesequence") !== "undefined" && res[start].getAttribute("animatesequence") != null)
+				{
+					if(parseInt(res[start].getAttribute("animatesequence")) == (resources - 1))
+					{
+						res[start].style.display = "block";
+						res[start].style.opacity = "1";
+					}
+				}else{
+						res[start].style.display = "block";
+						res[start].style.opacity = "1";
+				}
+			}
+		}else{
+				dummySlide(slide);
+				inertiaObject.dummySelected = parseInt(slide);
+		}
+		
+
+}
 
 inertia.prototype = {
 	load : function(){
 		
 			// i use the url to determine the current slide,
 			// this is helpful when the user refresh the page.
-			var myslidenumer 		= 		document.URL;
-			var newslider 			= 		myslidenumer.split("#");
-			
-			inertiaObject.mycurrentselection	= 		newslider[1] != undefined ? newslider[1] : setTimeout(function(){window.location = document.URL + "#0";},1000);
-			
+			var myslidenumber 		= 		document.URL;
+			var newslider 			= 		myslidenumber.split("#");
+			inertiaObject.mycurrentselection	= 		newslider[1] != undefined ? newslider[1] : inertiaObject.mycurrentselection = 0;
 			var mycanvasProp 		= 		new	canvasConfig();
 			var myscreenheight		=		mycanvasProp.screenHeight;
 			var myscreenwidth		=		mycanvasProp.screenWide;
@@ -469,6 +755,12 @@ inertia.prototype = {
 				}
 			}
 			
+			//clear all notes
+			var mynote		=		__util.Tget("note");
+			for(var note = 0;note < mynote.length;note++){
+				mynote[note].style.display = "none";
+			}
+			
 			//for bg images
 			var checkImages 	= 		new checkimage();
 			checkImages.init(inertiaObject.mycurrentselection);
@@ -488,17 +780,17 @@ inertia.prototype = {
 			
 			window.addEventListener("keyup",function(e){
 				if(e.keyCode == 39){
-					__util.xTime();
-					inertiaObject.autoPlayer = null;
-					navigateNext(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) + 1);
+				next();
 				}else if(e.keyCode == 37){
-					__util.xTime();
-					navigatePrev(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) - 1);
+				prev();
 				}else if(e.keyCode == 72){
 					var myhighlight = new inertia();
 					myhighlight.load.highlight();
 				}else if(e.keyCode == 84){
 					__util.tool();
+				}else if(e.keyCode == 80){
+					//call for presenter's view
+					__util.presenter();
 				}else{
 					
 				}
@@ -506,6 +798,7 @@ inertia.prototype = {
 			
 			__util.get('#inertia-next').addEventListener("click",function(){
 				__util.xTime();
+				inertiaObject.autoPlayer = null;
 				navigateNext(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) + 1);
 			},false);
 			
@@ -578,6 +871,22 @@ inertia.prototype.load.highlight = function()
 	}
 };
 
+var next = inertia.prototype.load.nextSlide = function(){
+	__util.xTime();
+	inertiaObject.autoPlayer = null;
+	navigateNext(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) + 1);
+
+}
+
+var prev = inertia.prototype.load.prevSlide = function(){
+	__util.xTime();
+	navigatePrev(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) - 1);
+}
+
+var goToSlide = inertia.prototype.load.jumpSlide = function(n){
+	jumpTo(parseInt(inertiaObject.mycurrentselection),parseInt(n));
+}
+
 var __util = {
 	get : function(selector)
 	{
@@ -589,12 +898,12 @@ var __util = {
 		{
 			if(selector.match(/#/g) == "#")
 			{
-			var newselector = selector.split("#");
-			var select = document.getElementById(newselector[1]);
+			var newselector = selector.replace(/#/,"");
+			var select = document.getElementById(newselector);
 			return select;
 			}else
 			{
-			var newselector = selector.trim(".");
+			var newselector = selector.replace(/./,"");
 			var select = document.getElementsByClassName(newselector);
 			return select;
 			}
@@ -684,6 +993,10 @@ var __util = {
 		
 		return w3c + crx + moz + o+ms;
 
+	},
+	//added alpha 2
+	presenter : function(){
+		myPresenterview = window.open(document.URL,"inertia.js : Presenter's View","width=200,height=200");
 	}
 }
 
@@ -734,8 +1047,6 @@ var mytransition = function(select,mynext){
 		
 		setTimeout(function(){
 			checkAutoPlay(nextTarget,nextRes);
-			//__emptyBg(select);
-			//alert("yeah");
 		},this.myinterval);
 	}
 	
@@ -763,6 +1074,7 @@ var execTrans = function(mytarget,mynextTarget){
 var execAnimate = function(mytarget,background){
 	
 	this.transintarget = mytarget;
+	
 	this.transinbackground = background != '' ? background : "#FFF";
 	
 	this.$ = new __animationSheets();
@@ -775,6 +1087,7 @@ inertiaZoom.prototype.init = function()
 {
 
 	var parentZoom = __util.Tget(inertiaObject.tags[3]);
+	
 		for(var count = 0;count < parentZoom.length;count++)
 		{
 		var childZoom = parentZoom[count].getElementsByClassName("resources");
@@ -782,6 +1095,7 @@ inertiaZoom.prototype.init = function()
 		for(var zcount = 0;zcount < childZoom.length;zcount++)
 		{
 			var inertiaZ = new inertiaZoom();
+			
 			inertiaZ.zoomify(childZoom[zcount], parentZoom[count]);
 		}
 	}
@@ -1071,7 +1385,7 @@ __animationSheets.prototype = {
 		
 		style.checkSheet(toCheck);
 		console.log(toCheck);
-		return myrule = new __newRule(toCheck);
+		return new __newRule(toCheck);
 	}
 }
 
@@ -1083,7 +1397,7 @@ __newRule.prototype = {
 		
 		mysheet.innerHTML += appendRule;
 		
-		return mytransform = new __transition();
+		return new __transition();
 	}
 }
 
@@ -1240,9 +1554,9 @@ __slideAnimation.prototype = {
 			var ifpanelAnimate = panelAnimate.split(":");
 			//check if we have a color
 			if(ifpanelAnimate[1] == '' || ifpanelAnimate[1] == undefined){
-				mybackground = "#FFF";
+				var mybackground = "#FFF";
 			}else{
-				mybackground = ifpanelAnimate[1];
+				var mybackground = ifpanelAnimate[1];
 			}
 			//make transparent background
 			__util.Tget(inertiaObject.tags[3])[target].style.background = "transparent";
@@ -1377,6 +1691,12 @@ var __x = function(target,property,value)
 		case "transformStyle":
 			return fx ? target.style.transformStyle = value : cr ? target.style.webkitTransformStyle = value : "yuck";
 			break;
+		case "transform":
+			return fx ? target.style.transform = value : cr ? target.style.webkitTransform = value : "yuck";
+			break;
+		case "transformOrigin":
+			return fx ? target.style.transformOrigin = value : cr ? target.style.webkitTransformOrigin = value : "yuck";
+			break;
 	}
 };
 
@@ -1444,7 +1764,7 @@ var canvasTransition = execTrans.prototype = {
  * MY OWN API
  *
  ******************************************************/
- __api = function(target){
+var __api = function(target){
 	return myelem = new elem(target);
 }
 
@@ -1456,8 +1776,23 @@ var elem = function(thisTarget){
 	this.getBg = function(){
 		return __util.Tget(inertiaObject.tags[3])[this.target].getElementsByTagName("slide-background")[0];
 	}
+	this.getChild = function(x){
+		var mychild = x;
+		var myparent = __util.Tget(inertiaObject.tags[3])[this.target];
+		if(mychild.match(/#/g) == "#")
+		{
+			var selector = mychild.replace(/#/,"");
+			return document.getElementById(selector[1]);
+		}else
+		{
+			var selector = mychild.replace(/./,"");
+			return myparent.getElementsByClassName(selector);
+		}
+	}
 }
- 
+
+
+
 
 
 
