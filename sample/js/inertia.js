@@ -325,7 +325,13 @@ window.onload = function()
 	var myurl = document.URL;
 	var canvas = new canvasConfig();
 	
-	if(window.opener != null){
+	try{
+		var auth = window.opener.authenticate();
+	}catch(e){
+		var auth = "";
+	}
+	
+	if(window.opener != null && auth == "inertia"){
 		canvas.presentersView();
 		inertiaObject.presentersView = true;
 	}else{
@@ -631,7 +637,7 @@ var createPresenter = function(){
 		
 		var myviewer = document.createElement("div");
 		myviewer.id = "inertia-viewer";
-		myviewer.setAttribute("style","background:#0099CC;z-index:100;position:absolute;top:0px;right:0px;width:900px;height:600px;box-shadow:0px 2px 15px #000;");
+		myviewer.setAttribute("style","z-index:100;position:absolute;width:900px;height:600px;box-shadow:0px 2px 15px #000;");
 		document.getElementById("inertia-viewer-wrapper").appendChild(myviewer);
 		
 		//inject html
@@ -673,6 +679,12 @@ var checkSlide =  canvasConfig.prototype.presentersView.checkSlide = function(n)
 			mycanvas[cnvs].style.border = "none";
 		}
 	}
+	
+}
+
+var authenticate =  canvasConfig.prototype.presentersView.checkopener = function(){
+	
+	return "inertia";
 	
 }
 		
@@ -1126,7 +1138,6 @@ inertiaZoom.prototype.init = function()
 {
 
 	var parentZoom = __util.Tget(inertiaObject.tags[3]);
-	
 		for(var count = 0;count < parentZoom.length;count++)
 		{
 		var childZoom = parentZoom[count].getElementsByClassName("resources");
@@ -1134,7 +1145,6 @@ inertiaZoom.prototype.init = function()
 		for(var zcount = 0;zcount < childZoom.length;zcount++)
 		{
 			var inertiaZ = new inertiaZoom();
-			
 			inertiaZ.zoomify(childZoom[zcount], parentZoom[count]);
 		}
 	}
@@ -1166,14 +1176,18 @@ inertiaZoom.prototype.zoomify = function(targetChild, targetParent){
 			}else if(mw < mh)
 			{
 			var compute = window.innerHeight - (scrh - myh);
+			}else{
+			//if it is a square...just use any :-)
+			//but i prefer height cause...just an intuition
+			var compute = window.innerHeight - (scrh - myh);
 			}
 			//for 3d zooming 
 					var zoomer = ["@%100keyframes zoomed{0%{opacity:1;%100transform:scale(",myscale,") translateY(0px) translateX(0px) translateZ(0px);}100%{opacity:1;%100transform:translateY(",mycenterpointH,"px) translateX(",mycenterpointW,"px) translateZ(",compute,"px) scale(",myscale,");}}",
 								 "@%100keyframes zoomedout{0%{opacity:1;%100transform:translateY(",mycenterpointH,"px) translateX(",mycenterpointW,"px) translateZ(",compute,"px);}100%{opacity:1;%100transform:translateY(0px) translateX(0px) translateZ(0px) scale(",myscale,");}}"].join("");
 					zoomer = __util.evaluate(zoomer);
 					var zoomSheet = new stylesheet();
-					var zSheet = zoomSheet.checkSheet("inertia-zoomsheet");
-					zSheet.innerHTML += zoomer;
+					var zSheet = zoomSheet.checkSheet("zoomsheet");
+					zSheet.innerHTML = zoomer;
 					
 						if(inertiaObject.zoomed == true){
 							__x(targetParent,"animationName","zoomedout");
