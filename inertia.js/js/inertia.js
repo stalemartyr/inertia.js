@@ -1,7 +1,7 @@
 /*************************************************************
 *	Software 			: 		Inertia OpenSlide Library
 *	Created by 			: 		Jim-Bert Amante
-*	Licenced under		: 		none so far
+*	Licenced under			: 		MIT
 *	Copyright			:		2013
 *
 **************************************************************/
