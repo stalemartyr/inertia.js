@@ -1,4 +1,3 @@
-
 <img src='https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-prn1/1238304_707747342572228_1178345847_n.jpg' width='100%'>
 inertia.js
 ==========
@@ -8,7 +7,8 @@ a free open-source browser-based presentation using javascript, html5 and css3
 Demo
 ====
 1. https://dl.dropboxusercontent.com/u/15594195/inertia.v1.19/index.html#0 <br/>
-2. https://dl.dropboxusercontent.com/u/15594195/inertia.v.19.sample/index.html#0
+2. https://dl.dropboxusercontent.com/u/15594195/inertia.v.19.sample/index.html#0<br/>
+3. https://dl.dropboxusercontent.com/u/15594195/bssw/index.html#0
 
 Basic
 =====
