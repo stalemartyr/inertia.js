@@ -75,6 +75,90 @@ canvasTransition.mycube = function(){
 		});
 	
 };
+canvasTransition.replace = function(){
+		var out = __util.Tget(inertiaObject.tags[3])[this.transouttarget];
+		var cube = __util.evaluate("@%100keyframes replacein{0%{%100transform:scale(0.7) translateX("+out.getBoundingClientRect().width+"px);opacity:0;}50%{%100transform:scale(0.7) translateX("+out.getBoundingClientRect().width+"px);opacity:1;}100%{%100transform:scale(1) translateX(0px);opacity:1;}}")+
+				 __util.evaluate("@%100keyframes replaceout{50%{%100transform:scale(0.7) translateX(-"+out.getBoundingClientRect().width+"px);}80%{%100transform:scale(0.7) translateX(-"+out.getBoundingClientRect().width+"px);opacity:1;}100%{%100transform:scale(0.7) translateX(-"+out.getBoundingClientRect().width+"px);opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(cube).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "replacein",
+				duration : "1s",
+				delay:"700ms",
+				fillmode : "forwards"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "replaceout",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+	
+};
+canvasTransition.fast = function(){
+		var out = __util.Tget(inertiaObject.tags[3])[this.transouttarget];
+		var cube = __util.evaluate("@%100keyframes fastin{0%{%100transform:translateX("+screen.width+"px) skew(-10deg);opacity:1;}80%{%100transform:translateX(0px) skew(-10deg);opacity:1;}100%{%100transform:translateX(0px) skew(0deg);opacity:1;}}")+
+				 __util.evaluate("@%100keyframes fastout{100%{%100transform:translateX(-"+screen.width+"px) skew(-10deg);}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(cube).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "fastin",
+				duration : "1s",
+				delay:"700ms",
+				fillmode : "forwards"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "fastout",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+	
+};
+canvasTransition.spidey = function(){
+		var out = __util.Tget(inertiaObject.tags[3])[this.transouttarget];
+		var cube = __util.evaluate("@%100keyframes fastin{0%{%100transform:rotateZ(-90deg);%100transform-origin:100% 0%;opacity:0;}50%{%100transform:rotateZ(-90deg);%100transform-origin:100% 0%;opacity:1;}100%{%100transform:rotateZ(0deg);%100transform-origin:100% 0%;opacity:1;}}")+
+				 __util.evaluate("@%100keyframes fastout{0%{%100transform:rotateZ(0deg);%100transform-origin:0% 0%;opacity:1;}90%{%100transform:rotateZ(90deg);%100transform-origin:0% 0%;opacity:1;}100%{%100transform:rotateZ(90deg);%100transform-origin:0% 0%;opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(cube).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "fastin",
+				duration : "1s",
+				delay:"700ms",
+				fillmode : "forwards"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "fastout",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+	
+};
+canvasTransition.color = function(){
+		var out = __util.Tget(inertiaObject.tags[3])[this.transouttarget];
+		var cube = __util.evaluate("@%100keyframes fastin{0%{%100transform:rotateZ(-90deg);%100transform-origin:100% 0%;opacity:0;}50%{%100transform:rotateZ(-90deg);%100transform-origin:100% 0%;opacity:1;}100%{%100transform:rotateZ(0deg);%100transform-origin:100% 0%;opacity:1;}}")+
+				 __util.evaluate("@%100keyframes fastout{0%{%100transform:rotateZ(0deg);%100transform-origin:0% 0%;opacity:1;}90%{%100transform:rotateZ(90deg);%100transform-origin:0% 0%;opacity:1;}100%{%100transform:rotateZ(90deg);%100transform-origin:0% 0%;opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(cube).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "fastin",
+				duration : "1s",
+				delay:"700ms",
+				fillmode : "forwards"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "fastout",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+	
+};
 
 
 canvasTransition.fullrotate = function(){
@@ -214,6 +298,50 @@ canvasTransition.doorleft = function(){
 			}
 		});
 }
+canvasTransition.threedpanels = function(){
+		var farLeft = screen.width;
+		var moveNow = __util.evaluate("@%100keyframes entrancepanel{100%{%100transform:translateZ(-500px);opacity:0;}}")+
+					  __util.evaluate("@%100keyframes closedoor{0%{%100transform:translateZ(500px);opacity:0;display:block}100%{%100transform:translateZ(0px);opacity:1;display:block;}}");
+		
+		this.$.mySheet("inertia-stylesheet").myNewRule(moveNow).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "closedoor",
+				duration : "500ms",
+				fillmode : "forwards",
+				delay:"500ms"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "entrancepanel",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+		
+}
+canvasTransition.threedpanelsreverse = function(){
+		var farLeft = screen.width;
+		var moveNow = __util.evaluate("@%100keyframes entrancepanel{100%{%100transform:translateZ(500px);opacity:0;}}")+
+					  __util.evaluate("@%100keyframes closedoor{0%{%100transform:translateZ(-500px);opacity:0;display:block}100%{%100transform:translateZ(0px);opacity:1;display:block;}}");
+		
+		this.$.mySheet("inertia-stylesheet").myNewRule(moveNow).transform({
+			incoming : {
+				object : this.transintarget,
+				name : "closedoor",
+				duration : "500ms",
+				fillmode : "forwards",
+				delay:"500ms"
+			},
+			outcoming : {
+				object : this.transouttarget,
+				name : "entrancepanel",
+				duration : "1s",
+				fillmode : "forwards"
+			}
+		});
+		
+}
 canvasTransition.doorright = function(){
 		var farLeft = screen.width;
 		var moveNow = __util.evaluate("@%100keyframes opendoor2{0%{opacity:1;display:block;%100transform:rotateY(0deg);%100transform-origin:0% 0%;}20%{opacity:1;display:block;%100transform:rotateY(40deg);%100transform-origin:0% 0%;}100%{opacity:0;display:none;%100transform:rotateY(40deg) translateX(2000px);%100transform-origin:0% 0%;}}")+
@@ -236,153 +364,6 @@ canvasTransition.doorright = function(){
 		});
 }
 
-/**************************************************************************
- *
- * Animating background images/color...uhm...it kinda complicated but
- * you can also make your own
- * __api(this.transintarget).getBg() <--- is the background container
- * 							   		 <--- using this you can access the 
- *									 <--- background container
- * __api(this.transintarget).getSlide() <-- is the slide wherein background will animate
- **************************************************************************/
-
-// sliced3x3 v. 1.0
-panelAnimation.sliced3x3 = function(){
-//better if use showpane = false
-		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
-		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
-		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
-		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
-		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
-		for(var count=0;count < 9;count++){
-			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{opacity:0;}to{opacity:1;}}");
-			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
-			var top = (parseInt(matrix[1][count]) - 1) * myheight;
-			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
-			var slices = document.createElement("div");
-			slices.setAttribute("id",matrix[3][count]);
-			slices.setAttribute("style","background-size:cover;background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
-			__api(this.transintarget).getBg().appendChild(slices);
-		}
-}
-panelAnimation.enlarge3x3 = function(){
-//better if use showpane = false
-		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
-		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
-		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
-		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
-		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
-		for(var count=0;count < 9;count++){
-			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{width:0px;height:0px;}to{width:"+mywidth+"px;height:"+myheight+"px;}}");
-			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
-			var top = (parseInt(matrix[1][count]) - 1) * myheight;
-			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
-			var slices = document.createElement("div");
-			slices.setAttribute("id",matrix[3][count]);
-			slices.setAttribute("style","background-size:cover;background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:0px;height:0px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
-			__api(this.transintarget).getBg().appendChild(slices);
-		}
-}
-panelAnimation.fly3x3 = function(){
-//better if use showpane = false
-		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
-		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
-		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
-		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
-		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
-		for(var count=0;count < 9;count++){
-			var top = (parseInt(matrix[1][count]) - 1) * myheight;
-			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
-			var slices = document.createElement("div");
-			slices.setAttribute("id",matrix[3][count]);
-			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{top:-"+matrix[2][count]+"px;opacity:0;}to{top:"+top+"px;opacity:1;}}");
-			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
-			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:"+mywidth+"px;top:-"+matrix[2][count]+"px;height:"+myheight+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
-			 __api(this.transintarget).getBg().appendChild(slices);
-		}
-}
-panelAnimation.card3x3 = function(){
-//better if use showpane = false
-		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
-		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
-		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
-		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
-		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
-		for(var count=0;count < 9;count++){
-			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{100%{%100transform:rotateX(0deg);opacity:1;}}");
-			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
-			var top = (parseInt(matrix[1][count]) - 1) * myheight;
-			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
-			var slices = document.createElement("div");
-			slices.setAttribute("id",matrix[3][count]);
-			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;%100transform:rotateX(90deg);")+"z-index:-1;");
-			 __api(this.transintarget).getBg().appendChild(slices);
-		}
-}
-
-panelAnimation.flippage = function(){
-	var heights = parseInt(__api(this.transintarget).getSlide().style.height) / 5;
-	var width = parseInt(__api(this.transintarget).getSlide().style.width);
-	var left = parseInt(__api(this.transintarget).getSlide().style.left);
-	var matrix = [["0","1","2","3","4"],["200","300","400","500","600"],["-","","-","","-"]];
-	for(var count = 0;count < 5;count++)
-	{
-		var flips = document.createElement("div");
-		var top = parseInt(heights) * parseInt(matrix[0][count]);
-		flips.setAttribute("style","position:absolute;opacity:0;left:"+matrix[2][count]+screen.width+"px;background-color:#0099CC;background:"+this.transinbackground+" 0px -"+top+"px;width:"+width+"px;height:"+heights+"px;top:"+top+"px;"+__util.evaluate("%100transform:rotateX(180deg);%100transform-origin:0% 50%;%100animation:flips"+parseInt(matrix[0][count])+" 2500ms "+parseInt(matrix[1][count])+"ms forwards;"));
-		__api(this.transintarget).getBg().appendChild(flips);
-		var myflip = __util.evaluate("@%100keyframes flips"+parseInt(matrix[0][count])+"{30%{left:0px;%100transform:rotateX(180deg);opacity:1;}80%{opacity:1;left:0px;%100transform:rotateX(180deg);}100%{opacity:1;left:0px;%100transform:rotateX(0deg);}}");
-		this.$.mySheet("inertia-panelsheet").myNewRule(myflip);
-	}
-}
-
-panelAnimation.column1_3x1 = function(){
-//better if use showpane = false
-		var matrix =[["1","2","3"],["1","1","1"],["500","900","1300"],["t1","t2","t3"],["-","","-"]];
-		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
-		var myheight = parseInt(__api(this.transintarget).getSlide().style.height);
-		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
-		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
-		for(var count=0;count < 3;count++){
-			var top = (parseInt(matrix[1][count]) - 1) * myheight;
-			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
-			var slices = document.createElement("div");
-			slices.setAttribute("id",matrix[3][count]);
-			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+matrix[4][count]+parseInt((screen.height))+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;")+"z-index:-1;opacity:0;");
-
-			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{100%{top:"+top+"px;opacity:1;}}");
-			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
-			__api(this.transintarget).getBg().appendChild(slices); //important
-		}
-	
-}
-panelAnimation.circular = function(){
-		//simple 1...
-		//create your object..just like html
-		var mycircle = document.createElement("div");
-		mycircle.setAttribute("style","position:absolute;width:0%;height:0%;margin:50%;"+__util.evaluate("%100animation:circleAnimate 1s 1s forwards;")+"background:"+this.transinbackground+";background-position:center;opacity:1;border-radius:50%;");
-		__api(this.transintarget).getBg().appendChild(mycircle);
-		
-		//create animation
-		var myanimation = __util.evaluate("@%100keyframes circleAnimate{100%{opacity:1;width:100%;height:100%;margin:0%;border-radius:0%;}}");
-		//inject animation to our temporary section
-		this.$.mySheet("inertia-panelsheet").myNewRule(myanimation);
-	
-}
-panelAnimation.flowfrombelow = function(){
-		//simple 1...
-		//create your object..just like html
-		var mycircle = document.createElement("div");
-		mycircle.setAttribute("style","position:absolute;margin:100% 50% 0% 50%;width:0%;height:0%;bottom:0px;"+__util.evaluate("%100animation:flowbelow 1s 1s forwards;")+"background:"+this.transinbackground+";background-position:center;opacity:1;border-top:solid #0099CC 10px;");
-		__api(this.transintarget).getBg().appendChild(mycircle);
-		
-		//create animation
-		var myanimation = __util.evaluate("@%100keyframes flowbelow{50%{opacity:1;width:100%;height:0%;margin:0%;border-top:solid #0099CC 10px;}99%{border-top:solid #0099CC 10px;}100%{opacity:1;width:100%;height:100%;margin:0%;border-top:none;}}");
-		//inject animation to our temporary section
-		this.$.mySheet("inertia-panelsheet").myNewRule(myanimation);
-	
-}
-
 /**************************************************
  * 
  *  effects for animating the resources
@@ -403,16 +384,7 @@ contentAnimation.fadein = function() //check
 			duration : '1s'
 		});
 	};
-contentAnimation.fadeout = function() //check
-	{
-		var fadeout = __util.evaluate("@%100keyframes res_fadeout{0%{opacity:1;}100%{opacity:0;}}");
-		this.$.mySheet("inertia-stylesheet").myNewRule(fadeout).enterRule({
-			object : this.mytargetchild,
-			enter : 'res_fadeout',
-			duration : '1s',
-			fill:"forwards"
-		});
-	};
+
 contentAnimation.slidein = function()
 	{
 		var initialleft = this.mytargetchild.style.left ? this.mytargetchild.style.left : "0px";
@@ -462,6 +434,57 @@ contentAnimation.rotatein = function()
 			duration : '1s'
 		});
 	};
+contentAnimation.coolyin = function()
+	{
+		var rotatein = __util.evaluate("@%100keyframes coolyin{0%{%100transform-origin:50% 0%;%100transform:rotateY(360deg) scale(10);}100%{%100transform-origin:50% 0%;%100transform:rotateY(0deg) scale(1);}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(rotatein).enterRule({
+			object : this.mytargetchild,
+			enter : 'coolyin',
+			duration : '1s'
+		});
+	};
+	
+contentAnimation.walkin = function()
+	{
+		var rotatein = __util.evaluate("@%100keyframes walkin{0%{%100transform-origin:50% 0%;%100transform:scale(5) translateX(-100%);opacity:0.5;}50%{%100transform-origin:50% 0%;%100transform:scale(5) translateX(0px);opacity:0.5;}100%{%100transform-origin:50% 0%;%100transform:rotateY(0deg) scale(1);opacity:1;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(rotatein).enterRule({
+			object : this.mytargetchild,
+			enter : 'walkin',
+			duration : '1500ms'
+		});
+	};
+	
+//////////////////////////
+contentAnimationOut.fadeout = function() //check
+	{
+		var fadeout = __util.evaluate("@%100keyframes res_fadeout{0%{opacity:1;}100%{opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(fadeout).enterRule({
+			object : this.mytargetchild,
+			enter : 'res_fadeout',
+			duration : '1s',
+			fill:"forwards"
+		});
+	};
+contentAnimationOut.slideoutright = function() //check
+	{
+		var fadeout = __util.evaluate("@%100keyframes slideout1{100%{margin-left:300px;opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(fadeout).enterRule({
+			object : this.mytargetchild,
+			enter : 'slideout1',
+			duration : '1s',
+			fill:"forwards"
+		});
+	};
+contentAnimationOut.slideoutleft = function() //check
+	{
+		var fadeout = __util.evaluate("@%100keyframes slideout1{100%{margin-right:300px;opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(fadeout).enterRule({
+			object : this.mytargetchild,
+			enter : 'slideout1',
+			duration : '1s',
+			fill:"forwards"
+		});
+	};
 	
 //image specific transition
 	
@@ -492,6 +515,39 @@ animationLoop.rotating2 = function()
 			mode : 'loop' // once || loop
 		});
 	}
+animationLoop.rotating3 = function()
+	{
+		var rotate2 = __util.evaluate("@%100keyframes rotating{100%{%100transform:rotateX(360deg);}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(rotate2).loopRule({
+			object : this.mytargetchild,
+			loop : 'rotating',
+			delay:'0s',
+			duration : '3s',
+			mode : 'loop' // once || loop
+		});
+	}
+animationLoop.rotating4 = function()
+	{
+		var rotate2 = __util.evaluate("@%100keyframes rotating{100%{%100transform:rotateY(360deg);}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(rotate2).loopRule({
+			object : this.mytargetchild,
+			loop : 'rotating',
+			delay:'0s',
+			duration : '3s',
+			mode : 'loop' // once || loop
+		});
+	}
+animationLoop.pulse = function()
+	{
+		var rotate2 = __util.evaluate("@%100keyframes pulse{0%{opacity:1;}100%{opacity:0;}}");
+		this.$.mySheet("inertia-stylesheet").myNewRule(rotate2).loopRule({
+			object : this.mytargetchild,
+			loop : 'pulse',
+			delay:'0s',
+			duration : '1s',
+			mode : 'loop' // once || loop
+		});
+	}
 	
 /**********************************************
  * 
@@ -500,27 +556,6 @@ animationLoop.rotating2 = function()
  * 
  * *******************************************/	
 
-/*backgroundAnimation.fadeinslide01 = function()
-{
-	var fadein = __util.evaluate("@%100keyframes fadeinImg{0%{opacity:0;display:none;}100%{opacity:1;display:block;}}");
-	this.$.mySheet("inertia-bgsheet").myNewRule(fadein).transformImage({
-		bg : this.target,
-		bgImage : 'fadeinImg',
-		bgDuration : '1s',
-		bgDelay :'0s'
-	});
-};
-
-backgroundAnimation.fadeoutslide01 = function()
-{
-	var fadeout = __util.evaluate("@%100keyframes fadeoutImg{from{opacity:1;display:block;}to{opacity:0;display:none;}}");
-	this.$.mySheet("inertia-bgsheet").myNewRule(fadeout).transformImage({
-		bg : this.target,
-		bgImage : 'fadeoutImg',
-		bgDuration : '1s',
-		bgDelay :'0s'
-	});
-}*/
 
 backgroundAnimation.fadeinout = function()
 {
@@ -539,5 +574,253 @@ backgroundAnimation.fadeinout = function()
 		bgDelay :'0s'
 	}});
 };
+//as of 1.21
+backgroundAnimation.slideall = function()
+{
+	var fadein = __util.evaluate("@%100keyframes slideinImg{0%{opacity:1;display:block;left:100%;}100%{opacity:1;display:block;left:0%;}} @%100keyframes slideoutImg{100%{opacity:1;left:-100%;}}");
+	this.$.mySheet("inertia-bgsheet").myNewRule(fadein).transformImage({
+	incoming :{
+		bg : this.targetin,
+		bgImage : 'slideinImg',
+		bgDuration : '1s',
+		bgDelay :'0s'
+	},
+	outcoming :{
+		bg : this.targetout,
+		bgImage : 'slideoutImg',
+		bgDuration : '1s',
+		bgDelay :'0s'
+	}});
+};
+
+
+/**************************************************************************
+ *
+ * Animating background images/color...uhm...it kinda complicated 
+ * cause i dont know what im thinking when i crete this section...but
+ * you can also make your own...if you can...and ah...sorry for
+ * messy code
+ * __api(this.transintarget).getBg() <--- is the background container
+ * 							   		 <--- using this you can access the 
+ *									 <--- background container
+ * __api(this.transintarget).getSlide() <-- is the slide wherein background will animate
+ **************************************************************************/
+
+// sliced3x3 v. 1.0
+panelAnimation.sliced3x3 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{opacity:0;}to{opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background-size:cover;background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
+			__api(this.transintarget).getBg().appendChild(slices);
+		}
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.enlarge3x3 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{width:0px;height:0px;}to{width:"+mywidth+"px;height:"+myheight+"px;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background-size:cover;background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:0px;height:0px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
+			__api(this.transintarget).getBg().appendChild(slices);
+		}
+		
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.fly3x3 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{from{top:-"+matrix[2][count]+"px;opacity:0;}to{top:"+top+"px;opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:"+mywidth+"px;top:-"+matrix[2][count]+"px;height:"+myheight+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;"));
+			 __api(this.transintarget).getBg().appendChild(slices);
+		}
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.card3x3 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{100%{%100transform:rotateX(0deg);opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;%100transform:rotateX(90deg);")+"z-index:-1;");
+			 __api(this.transintarget).getBg().appendChild(slices);
+		}
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.fly3x3d = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],
+					 ["1","1","1","2","2","2","3","3","3"],
+					 ["500","900","1300","1200","800","1000","700","1100","600"],
+					 ["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{0%{%100transform:rotateY(90deg) translateX(-500px);opacity:1;}100%{%100transform: translateX(0px) rotateY(0deg);opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;%100transform:rotateY(360deg);")+"z-index:-1;");
+			 __api(this.transintarget).getBg().appendChild(slices);
+		}
+		
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.fly3x3dreverse = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],["1","1","1","2","2","2","3","3","3"],["500","900","1300","1200","800","1000","700","1100","600"],["t1","t2","t3","m1","m2","m3","b1","b2","b3"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{0%{%100transform:rotateY(90deg) translateX(2000px);opacity:1;}100%{%100transform: translateX(0px) rotateY(0deg);opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;%100transform:rotateY(360deg);")+"z-index:-1;");
+			 __api(this.transintarget).getBg().appendChild(slices);
+		}
+		
+		this.normalizeAfter("1s","1300");
+}
+panelAnimation.bubbles3x3 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3","1","2","3","1","2","3"],
+					 ["1","1","1","2","2","2","3","3","3"],
+					 ["500","900","1300","1200","800","1000","700","1100","600"],
+					 ["t1","t2","t3","m1","m2","m3","b1","b2","b3"],
+					 ["#0099CC","#84FF43","#E75957","#E757CD","#7157E7","#57E7A9","#E3E757","#E77157","#57E7AD"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height) / 3;
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 9;count++){
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{0%{%100transform:translateY(1000px) translateZ(200px);background:"+matrix[4][count]+";opacity:1;display:block;border-radius:50%;width:100px;height:100px;}70%{%100transform:translateY(-100px) translateZ(200px);opacity:1;display:block;background:"+matrix[4][count]+";border-radius:50%;width:100px;height:100px;}100%{%100transform:translateY(0px) translateZ(0px);opacity:1;display:block;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;opacity:0;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+top+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;%100transform:rotateY(360deg);")+"z-index:-1;");
+			 __api(this.transintarget).getBg().appendChild(slices);
+		}
+		
+		this.normalizeAfter("1s","1300");
+}
+
+panelAnimation.flippage = function(){
+	var heights = parseInt(__api(this.transintarget).getSlide().style.height) / 5;
+	var width = parseInt(__api(this.transintarget).getSlide().style.width);
+	var left = parseInt(__api(this.transintarget).getSlide().style.left);
+	var matrix = [["0","1","2","3","4"],["200","300","400","500","600"],["-","","-","","-"]];
+	for(var count = 0;count < 5;count++)
+	{
+		var flips = document.createElement("div");
+		var top = parseInt(heights) * parseInt(matrix[0][count]);
+		flips.setAttribute("style","position:absolute;opacity:0;left:"+matrix[2][count]+screen.width+"px;background-color:#0099CC;background:"+this.transinbackground+" 0px -"+top+"px;width:"+width+"px;height:"+heights+"px;top:"+top+"px;"+__util.evaluate("%100transform:rotateX(180deg);%100transform-origin:0% 50%;%100animation:flips"+parseInt(matrix[0][count])+" 2500ms "+parseInt(matrix[1][count])+"ms forwards;"));
+		__api(this.transintarget).getBg().appendChild(flips);
+		var myflip = __util.evaluate("@%100keyframes flips"+parseInt(matrix[0][count])+"{30%{left:0px;%100transform:rotateX(180deg);opacity:1;}80%{opacity:1;left:0px;%100transform:rotateX(180deg);}100%{opacity:1;left:0px;%100transform:rotateX(0deg);}}");
+		this.$.mySheet("inertia-panelsheet").myNewRule(myflip);
+	}
+	
+	this.normalizeAfter("2500ms","600");
+}
+
+panelAnimation.column1_3x1 = function(){
+//better if use showpane = false
+		var matrix =[["1","2","3"],["1","1","1"],["500","900","1300"],["t1","t2","t3"],["-","","-"]];
+		var mywidth = parseInt(__api(this.transintarget).getSlide().style.width) / 3;
+		var myheight = parseInt(__api(this.transintarget).getSlide().style.height);
+		var mytop = parseInt(__api(this.transintarget).getSlide().style.top);
+		var myleft = parseInt(__api(this.transintarget).getSlide().style.left);
+		for(var count=0;count < 3;count++){
+			var top = (parseInt(matrix[1][count]) - 1) * myheight;
+			var left = (parseInt(matrix[0][count]) - 1) * mywidth;
+			var slices = document.createElement("div");
+			slices.setAttribute("id",matrix[3][count]);
+			slices.setAttribute("style","background:"+this.transinbackground+" -"+left+"px -"+top+"px;position:absolute;width:"+mywidth+"px;height:"+myheight+"px;top:"+matrix[4][count]+parseInt((screen.height))+"px;left:"+left+"px;"+__util.evaluate("%100animation:"+matrix[3][count]+" 1s "+parseInt(matrix[2][count])+"ms forwards;")+"z-index:-1;opacity:0;");
+
+			var myanimate = __util.evaluate("@%100keyframes "+matrix[3][count]+"{100%{top:"+top+"px;opacity:1;}}");
+			this.$.mySheet("inertia-panelsheet").myNewRule(myanimate);
+			__api(this.transintarget).getBg().appendChild(slices); //important
+		}
+		
+		this.normalizeAfter("1s","1300");
+	
+}
+panelAnimation.circular = function(){
+		//simple 1...
+		//create your object..just like html
+		var mycircle = document.createElement("div");
+		mycircle.setAttribute("style","position:absolute;width:0%;height:0%;margin:50%;"+__util.evaluate("%100animation:circleAnimate 1s 1s forwards;")+"background:"+this.transinbackground+";background-position:center;opacity:1;border-radius:50%;");
+		__api(this.transintarget).getBg().appendChild(mycircle);
+		
+		//create animation
+		var myanimation = __util.evaluate("@%100keyframes circleAnimate{100%{opacity:1;width:100%;height:100%;margin:0%;border-radius:0%;}}");
+		//inject animation to our temporary section
+		this.$.mySheet("inertia-panelsheet").myNewRule(myanimation);
+		
+		this.normalizeAfter("1s","1s");
+	
+}
+panelAnimation.flowfrombelow = function(){
+		//simple 1...
+		//create your object..just like html
+		var mycircle = document.createElement("div");
+		mycircle.setAttribute("style","position:absolute;margin:100% 50% 0% 50%;width:0%;height:0%;bottom:0px;"+__util.evaluate("%100animation:flowbelow 1s 1s forwards;")+"background:"+this.transinbackground+";background-position:center;opacity:1;border-top:solid #0099CC 10px;");
+		__api(this.transintarget).getBg().appendChild(mycircle);
+		
+		//create animation
+		var myanimation = __util.evaluate("@%100keyframes flowbelow{50%{opacity:1;width:100%;height:0%;margin:0%;border-top:solid #0099CC 10px;}99%{border-top:solid #0099CC 10px;}100%{opacity:1;width:100%;height:100%;margin:0%;border-top:none;}}");
+		//inject animation to our temporary section
+		this.$.mySheet("inertia-panelsheet").myNewRule(myanimation);
+		
+		this.normalizeAfter("1s","1s");
+}
+
 
 
