@@ -9,7 +9,7 @@
 /*************************************************************
  * hi! this is my first open-source software so please
  * bear with it...i know there are bugs and a lot
- * of rooms for improvements but dont worry...this is a
+ * of rooms for improvemaents but dont worry...this is a
  * working beta version and it is easy to use because
  * (by default) it is packed with transitions/effects that
  * you can use. And if you like to create a plugin..just use
@@ -35,9 +35,11 @@ var inertiaObject = {
 			zoomed : false, 
 			//scaling to normal
 			scale : 1,
-			//global for counting the sequence of animation
+			
+			presentationScale : 1,
+			//global for counting the sequence of animation..it is also the current slide numbr
 			mycurrentselection : 0,
-			//global for determining the current slide number
+			//global for determining the current slide number (length)
 			myslidenumber : 0, 
 			//globar variable of this.mysize
 			currentAnimationSize : 0,
@@ -60,7 +62,11 @@ var inertiaObject = {
 			
 			curtainOut : false,
 			
-			startPosition : true
+			startPosition : true,
+
+			keyupEvents : new Object(),
+
+			keyupCache : undefined
 	},
 	
 	// initialize globar inertia
@@ -74,18 +80,21 @@ var inertiaObject = {
 		var tool = ["<div id='toolbar'>",
 					"<div id='tools1'>",
 						"<div id='mystatus'></div>",
-						"<select id='slide-number'><option value='select'>Select Slide</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-					"</div>",
-					"<div id='tool-nav'>",
+						"<div id='inertia-prev-prev'><div id='inertia-prev-prev2'></div></div>",
+						"<div id='inertia-prev'></div>",
+						"<div id='inertia-next'></div>",
+						"<div id='inertia-next-next'><div id='inertia-next-next2'></div></div>",
+						"<div id='inertia-progress'><div id='inertia-progressing'></div></div>",
+						"<select id='slide-number'><option value='select'>Select Slide</option></select>",
 						"<input type='button' id='inertia-go' onclick='goSlide()' value='go'>",
-						"<button id='inertia-prev'>Prev</button>",
-						"<button id='inertia-next'>Next</button>",
-						"<button id='inertia-card'>Card</button>",
+						"<button id='inertia-zin'>Zoom In</button>",
+						"<button id='inertia-zout'>Zoom Out</button>",
 					"</div>",
 				    "</div>"].join("");
 		var htm = __util.Tget(inertiaObject.tags[2]);
 		htm[0].innerHTML += tool;
 		__util.get("#toolbar").style.opacity = "0";
+		console.log("INERTIA TOOL LOADED...");
 	},
 	
 	// this thing handles the navigation from one slide to another
@@ -155,70 +164,86 @@ var inertiaObject = {
 	},
 	navigateNext = function(myprev,mynext)
 		{
-			if(mynext < inertiaObject.myslidenumber){
-				var childs = new checkchild(myprev);
-				var returnkey = childs.animateChild();
-				if(returnkey == 1){	
-					
+			if(mynext < inertiaObject.myslidenumber)
+			{
+				var childs			=		new checkchild(myprev);
+				var returnkey		=		childs.animateChild();
+				if(returnkey == 1)
+				{	
 					var trans 					= 			new mytransition(myprev,mynext);
+					
 					var transit 				= 			trans.checktrans();
+					
+					var checkImages				=			new checkimage();
 					
 					//preload resources of the next slide
 					var myinitializeResources 	=		 	new initializeResources();
+					
 					myinitializeResources.load(mynext);
 					
-					var checkImages = new checkimage();
 					checkImages.init(mynext,parseInt(mynext) - 1);
 					
-					
 					inertiaObject.mycurrentselection = mynext;
+					
 					window.location = "#" + mynext;
+					
+					inertiaObject.mycurrentslide = mynext;
 				}
 				
-				try{
+				if(typeof myPresenterview !== "undefined"){
 					myPresenterview.mysync(inertiaObject.mycurrentselection,inertiaObject.animatestart);
-				}catch(e){
-					//__util.presenter();
 				}
 				
-			}else{
+			}
+			else
+			{
 				alert("End of Slide. Thank you!");
 			}
+			
+			updateProgressBar();
 		},
 	navigatePrev = function(myprev,mynext)
 		{
-			if(myprev > 0){
+			if(myprev > 0)
+			{
 					var trans 							= 			new mytransition(myprev,mynext);
-					var transit 						= 			trans.checktrans();
 					
+					var transit 						= 			trans.checktrans();
+					//initialize image loader
+					var checkImages						=			new checkimage();
 					//preload resources
 					var myinitializeResources			=		 	new initializeResources();
+					
 					myinitializeResources.load(mynext);
 					
 					//check if theres an image to display at the backrground
-					var checkImages = new checkimage();
 					checkImages.init(parseInt(myprev) - 1,myprev);
 					
 					inertiaObject.mycurrentselection = mynext;
+					//set the url
 					window.location = "#" + mynext;
 					
-			}	
+					inertiaObject.mycurrentslide = mynext;
+			}
+
+			updateProgressBar();
 			
 	},
 	jumpTo = function(myprev,mynext)
 	{
-			var trans 					= 			new mytransition(myprev,mynext);
-			var transit 				= 			trans.checktrans();
-			
-			//preload resources of the next slide
-			var myinitializeResources 	=		 	new initializeResources();
+			var trans 							= 			new mytransition(myprev,mynext);
+			var transit 						= 			trans.checktrans();
+			var checkImages						=			new checkimage();
+			var myinitializeResources 			=		 	new initializeResources();
 			myinitializeResources.load(mynext);
 			
-			
-			var checkImages = new checkimage();
 			checkImages.init(mynext,myprev);
-			inertiaObject.mycurrentselection = mynext;
-			window.location = "#" + mynext;
+			inertiaObject.mycurrentselection	=			mynext;
+			inertiaObject.mycurrentslide		=			mynext;
+			window.location						=			["#",mynext].join("");
+
+			updateProgressBar();
+			
 	},
 	checkAutoPlay = function(target,execution){
 			//stable as of alpha 1.2.3
@@ -235,7 +260,7 @@ var inertiaObject = {
 					var ifautoplay = this.mychild[count].getAttribute('autoplay')
 					if(ifautoplay !== undefined && ifautoplay !== null){
 							console.log("186 "+ifautoplay);
-							var interval = __util.pTime(ifautoplay,"0s");
+							var interval = __util.pTime(ifautoplay,ifautoplay);
 							
 							inertiaObject.autoPlayer = setTimeout(function(){
 								
@@ -273,12 +298,9 @@ var inertiaObject = {
 									}
 								},interval);
 								
-					}else{
-							//alert("wala na");
 					}
 				}
 			}
-		//	var listChild = myparent.getElementsBy
 	},
 	
 	/* this section inserts the first slide
@@ -288,7 +310,8 @@ var inertiaObject = {
 	insertEndSlide = function(){
 			var parent		=		__util.Tget(inertiaObject.tags[1])[0];
 			var end			=		document.createElement("slide");
-			end.innerHTML	=		"<div style='color:#FFF;font-family:arial;text-align:center'>End of Presentation</div><div class='backgroundImage inertia-ending-slide' imgsrc='./backgrounds/b.jpg' imgin='fadeinout'></div>";
+			end.id			=		""
+			end.innerHTML	=		"<div style='color:#FFF;font-family:arial;text-align:center'>End of Presentation</div><div class='backgroundImage inertia-ending-slide' imgsrc='./backgrounds/b.jpg' transition='fadeinout'></div>";
 			end.setAttribute("showpane","false");
 			parent.appendChild(end);
 	
@@ -303,29 +326,23 @@ var inertiaObject = {
 			myinfo.innerHTML = content;
 			parent.insertBefore(myinfo,__util.Tget("slide")[0]);
 			
-			var main = __util.get("#inertia-myinfo");
-			main.setAttribute("style","margin:30px;");
-			
-			var mysub = main.getElementsByClassName("inertia-slide-info");
-			for(var count = 0;count < mysub.length;count++)
-			{
-				mysub[count].setAttribute("style","margin:10px;font-size:40px;color:#424242;font-family:arial;");
-			}
-			
-			var myround = main.getElementsByClassName("inertia-round");
-			for(var count = 0;count < myround.length;count++)
-			{
-				myround[count].setAttribute("style","border-radius:50%;border:solid #FFF 5px;width:10px;height:10px;background:yellowgreen;display:inline-block;box-shadow:0px 1px 3px #000;");
-			}
-			
-			var mykey = main.getElementsByClassName("inertia-key");
-			for(var count = 0;count < mykey.length;count++)
-			{
-				mykey[count].setAttribute("style","border-radius:10%;background:f3f3f3;color:gray;display:inline-block;box-shadow:0px 1px 3px #000;padding:10px;");
-			}
+	},
+	presviewInit = function(){
+		var el = __util.Tget(inertiaObject.tags[1])[0];
+		el.style.width = window.innerWidth + "px";
+		el.style.height = window.innerHeight + "px";
+	},
+	updateProgressBar = function(){
+		var progress = __util.get("#inertia-progressing"),
+			slideCount = inertiaObject.myslidenumber,
+			current = inertiaObject.mycurrentselection,
+			slidewidth = 100 / slideCount;
+		
+		progress.style.width = (slidewidth * current) + "%";
+		
 	};
 	
-var slide = new Object();
+//var slide = new Object();
 
 
 //this is an animation before anything else
@@ -333,17 +350,16 @@ var slide = new Object();
 //
 
 window.onload = function()
-{
-	var myurl = document.URL;
-	var canvas = new canvasConfig();
+{	
 	
-	try{
+	if(window.opener != null){
 		var auth = window.opener.authenticate();
-	}catch(e){
-		var auth = "";
+	}else{
+		console.log("RUNNING ON TOP");
 	}
 	
 	if(window.opener != null && auth == "inertia"){
+		var canvas = new canvasConfig();
 		canvas.presentersView();
 		inertiaObject.presentersView = true;
 	}else{
@@ -363,8 +379,13 @@ window.onload = function()
 		var canvas = new canvasConfig();
 		//initialize canvas
 		canvas.canvasInit(); 
+		
+		//initialize container
+		presviewInit();
 		//set aspect ratio
-		canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+		//__util.Tget(inertiaObject.tags[1])[0]
+		//canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+		canvas.aspectRatio(__util.Tget(inertiaObject.tags[1])[0],__util.Tget(inertiaObject.tags[3]));
 		//initialize css
 		canvas.initializeCSS();
 		//initialize curtain
@@ -379,35 +400,48 @@ window.onload = function()
 		var zoomElem = new inertiaZoom();
 		zoomElem.init();
 		
+		//update our progress
+		updateProgressBar();
+		
 		// DETERMINE IF A USER TRIGGERED A PRESENTER'S VIEW
 		// I NOTICED THAT WHEN THE USER CALLS A PRESENTERS VIEW
 		// AND THE MAIN WINDOW WAS REFRESHED...THE SYNCRONIZATION FAILED
 		// SO USING SESSIONSTORAGE I CAN DETERMINE WHETHER IT IS
 		// EXISTING OR NOT...COOKIES ARE NOT AVAILABLE IF YOU ARE NOT
 		// USING A WEB SERVER...OUCH!
-		
-		if(sessionStorage.presenter == "true"){
-			try{
-			// OPEN PRESENTATION
-			__util.presenter();
-			// CALL CHILD WINDOW'S FUNCTIONS
-			myPresenterview.checkSlide(inertiaObject.mycurrentselection);
-			myPresenterview.dummySlide(inertiaObject.mycurrentselection);
-			}catch(e){
-					alert(e);
+		try{
+			if(sessionStorage.presenter == "true"){
+				try{
+				// OPEN PRESENTATION
+				__util.presenter();
+				// CALL CHILD WINDOW'S FUNCTIONS
+				myPresenterview.checkSlide(inertiaObject.mycurrentselection);
+				myPresenterview.dummySlide(inertiaObject.mycurrentselection);
+				}catch(e){
+						alert(e);
+				}
 			}
+		}catch(e){
+			console.log(e);
 		}
 		//start inertia
 		__util.Tget(inertiaObject.tags[1])[0].style.display = "block";
 		
 	}
+	/*
+	var s = document.getElementsByClassName("resources");
+	
+	for(var i = 0;i < s.length;i++){
+		s[i].setAttribute("contenteditable","true");
+	}*/
 
 };
 
 window.onresize = function(){
+	presviewInit();
 	if(!inertiaObject.presentersView){
 		var canvas = new canvasConfig();
-		canvas.aspectRatio(window,__util.Tget(inertiaObject.tags[3]));
+		canvas.aspectRatio(__util.Tget(inertiaObject.tags[1])[0],__util.Tget(inertiaObject.tags[3]));
 	}else{
 	
 	}
@@ -452,11 +486,44 @@ canvasConfig.prototype = {
 		
 		
 	},
-	aspectRatio : function(myhost,target)
+	aspectRatio : function(myhost,target,opt)
 	{
-			var mytarget = target;
-			var windowheight = typeof myhost.innerHeight !== "undefined" ? parseInt(myhost.innerHeight) : parseInt(myhost.clientHeight);
-			var windowwidth = typeof myhost.innerWidth !== "undefined" ? parseInt(myhost.innerWidth) : parseInt(myhost.clientWidth);
+			var mytarget = target,
+				windowheight,
+				windowwidth;
+			
+			if(typeof myhost.innerHeight !== "undefined" && myhost.innerHeight != 0){
+				windowheight = parseInt(myhost.innerHeight);
+			}else if(typeof myhost.clientHeight !== "undefined" && myhost.clientHeight != 0){
+				windowheight = parseInt(myhost.clientHeight);
+			}else if(typeof myhost.getBoundingClientRect().height !== "undefined" && myhost.getBoundingClientRect().height != 0){
+				windowheight = myhost.getBoundingClientRect().height;
+			}else{
+				windowheight =  window.innerHeight;
+			}
+			
+			if(typeof opt !== "undefined" && typeof opt.height !== "undefined"){
+				//override windowheight if an option for
+				//height is present
+				windowheight = opt.height;
+			}
+			
+			if(typeof myhost.innerWidth !== "undefined" && myhost.innerWidth != 0){
+				windowwidth = parseInt(myhost.innerWidth)
+			}else if(typeof myhost.clientWidth !== "undefined" && myhost.clientWidth != 0){
+				windowwidth = myhost.clientWidth;
+			}else if(typeof myhost.getBoundingClientRect().width !== "undefined" && myhost.getBoundingClientRect().width != 0){
+				
+				windowwidth = myhost.getBoundingClientRect().width;
+			}else{
+				windowwidth =  window.innerWidth;
+			}
+			
+			if(typeof opt !== "undefined" && typeof opt.width !== "undefined"){
+				//override windowheight if an option for
+				//height is present
+				windowwidth = opt.height;
+			}
 			
 			var endCount = typeof mytarget.length !== "undefined" ? parseInt(mytarget.length) : 1;
 			
@@ -588,6 +655,7 @@ canvasConfig.prototype = {
 				checkSlide(opener.inertiaObject.mycurrentselection);
 				dummySlide(opener.inertiaObject.mycurrentselection);
 			}
+			
 		},false);
 		
 		
@@ -649,7 +717,9 @@ var initCurtain = function(){
 			var htm = __util.Tget(inertiaObject.tags[2]);
 			htm[0].appendChild(elem);
 		}
-	window.onkeyup = function(e){
+
+
+	inertiaObject.keyupEvents["curtain"] = function(e){
 			
 		if(e.keyCode == 66){
 			if(inertiaObject.curtainOut){
@@ -663,31 +733,36 @@ var initCurtain = function(){
 				inertiaObject.curtainOut = true;
 			}
 		}
+
 	}
-}
+};
 
 var initViews = function(){
-	/*__util.get("#inertia-card").onclick = function(){
-		__util.Tget(inertiaObject.tags[1])[0].style.display = "block";
-		__util.Tget(inertiaObject.tags[1])[0].style.width = "300px";
-		__util.Tget(inertiaObject.tags[1])[0].style.overflow = "auto";
-		var cards = __util.Tget(inertiaObject.tags[3]);
-		for(var i = 0;i < cards.length;i++){
-			cards[i].style.position = "relative";
-			cards[i].style.display = "inline-block";
-			cards[i].style.opacity = "1";
-			cards[i].style.margin = "20px";
-			cards[i].style.top = "0px";
-			cards[i].style.left = "0px";
+	
+	var pres = __util.Tget(inertiaObject.tags[1]);
+		
+	__util.get("#inertia-zout").onclick = function(){
+		inertiaObject.presentationScale -= 0.1;
+		__x(pres[0],"transform","scale("+inertiaObject.presentationScale+")");
 			
-			//__util.Tget(inertiaObject.tags[1]).style.verticalAlign = "top";
-			//__util.Tget(inertiaObject.tags[1]).style.width = "100%";
-			//__util.Tget(inertiaObject.tags[1]).style.height = "100%";
-			//__x(cards[i],"transform","scale(0.3)");
-			window.onresize = function(){};
+	}
+	__util.get("#inertia-zin").onclick = function(){
+		inertiaObject.presentationScale += 0.1;
+		__x(pres[0],"transform","scale("+inertiaObject.presentationScale+")");
+			
+	}
+	
+	inertiaObject.keyupEvents["views"] = function(e){
+		if(e.keyCode == 73){
+		inertiaObject.presentationScale += 0.1;
+		__x(pres[0],"transform","scale("+inertiaObject.presentationScale+")");
+			
+		}else if(e.keyCode == 79){
+		inertiaObject.presentationScale -= 0.1;
+		__x(pres[0],"transform","scale("+inertiaObject.presentationScale+")");
 			
 		}
-	}*/
+	}
 }
 
 var createPresenter = function(){
@@ -815,12 +890,13 @@ inertia.prototype = {
 		
 			// i use the url to determine the current slide,
 			// this is helpful when the user refresh the page.
-			var myslidenumber 		= 		document.URL;
-			var newslider 			= 		myslidenumber.split("#");
+			var myslidenumber 					= 		document.URL;
+			var newslider 						= 		myslidenumber.split("#");
 			inertiaObject.mycurrentselection	= 		newslider[1] != undefined ? newslider[1] : inertiaObject.mycurrentselection = 0;
-			var mycanvasProp 		= 		new	canvasConfig();
-			var myscreenheight		=		mycanvasProp.screenHeight;
-			var myscreenwidth		=		mycanvasProp.screenWide;
+			var mycanvasProp 					= 		new	canvasConfig();
+			//setting the screensizes
+			var myscreenheight					=		mycanvasProp.screenHeight;
+			var myscreenwidth					=		mycanvasProp.screenWide;
 			
 			//preload resources
 			var myinitializeResources = new initializeResources();
@@ -844,17 +920,19 @@ inertia.prototype = {
 			//check for any autoplay
 			checkAutoPlay(inertiaObject.mycurrentselection,inertiaObject.animatestart);
 			//end preload
-			/**initialize structures of slides :
+			
+			/* initialize structures of slides :
 			 * this analyze the markup of each element: sizes, width,
 			 * height, top, left etc.
-			 **/
+			 */
 			 
 			//initialize properties of all background images if any
 			for(var myimg = 0;myimg < end;myimg++){
 				var mycanvas = __util.Tget(inertiaObject.tags[3]);
 				var images = mycanvas[myimg].getElementsByClassName('backgroundImage');
-				for(var count = 0; count < images.length;count++){
-					var mysrc = images[count].getAttribute('imgsrc');
+				//for(var count = 0; count < images.length;count++){
+				if(typeof images[0] !== "undefined"){
+					var mysrc = images[0].getAttribute('imgsrc');
 					//start image
 					var myappend = __util.Tget(inertiaObject.tags[2])[0];
 					var myimgdiv = document.createElement('div');
@@ -870,6 +948,7 @@ inertia.prototype = {
 												  'display:none;',
 												  'top:0px;left:0px;'].join(""));
 					myappend.appendChild(myimgdiv);
+				//}
 				}
 			}
 			
@@ -897,11 +976,16 @@ inertia.prototype = {
 			}
 			
 			
-			window.addEventListener("keyup",function(e){
+			window.onkeyup = function(e){
+				inertiaObject.keyupCache(e);
+			};
+
+			inertiaObject.keyupCache = function(e){	
+
 				if(e.keyCode == 39){
-				next();
+					next();
 				}else if(e.keyCode == 37){
-				prev();
+					prev();
 				}else if(e.keyCode == 72){
 					var myhighlight = new inertia();
 					myhighlight.load.highlight();
@@ -911,15 +995,23 @@ inertia.prototype = {
 					//call for presenter's view
 					sessionStorage.presenter = "true"; 
 					__util.presenter();
+				}else if(e.keyCode == 69){
+					//call for presenter's view
+					expression.init();
 				}else{
 					
 				}
-			},false);
+						
+		
+				inertiaObject.keyupEvents["views"](e);
+				inertiaObject.keyupEvents["curtain"](e);
 			
+			};
+
 			__util.get('#inertia-next').addEventListener("click",function(){
 				__util.xTime();
 				inertiaObject.autoPlayer = null;
-				navigateNext(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) + 1);
+				navigateNext(inertiaObject.mycurrentselection,parseInt(inertiaObject.mycurrentselection) + 1);updateProgressBar();
 			},false);
 			
 			__util.get('#inertia-prev').addEventListener("click",function(){
@@ -1008,26 +1100,27 @@ var goToSlide = inertia.prototype.load.jumpSlide = function(n){
 }
 
 var __util = {
+	set : function(e,prop){
+		if(typeof prop !== "undefined" && typeof prop === "object"){
+			for(key in prop){
+				e.setAttribute(key,prop[key]);
+			}
+		}
+	},
 	get : function(selector)
 	{
-		try
-		{
-			var select = document.querySelector(selector.toString());
-			return select;
-		}catch(err)
-		{
-			if(selector.match(/#/g) == "#")
+			if(selector.match(/^#/g) == "#")
 			{
 			var newselector = selector.replace(/#/,"");
 			var select = document.getElementById(newselector);
 			return select;
 			}else
 			{
-			var newselector = selector.replace(/./,"");
+			var newselector = selector.replace(/^./,"");
 			var select = document.getElementsByClassName(newselector);
 			return select;
 			}
-		}
+		//}
 	},
 	Tget : function(selector)
 	{
@@ -1046,19 +1139,24 @@ var __util = {
 	pTime : function(myinterval,mydelay){
 		var intrv = 0;
 		var delay = 0;
-		if(myinterval.match(/ms/g) == "ms"){
+		
+		myinterval = myinterval.toString();
+		mydelay = mydelay.toString();
+		
+		if(myinterval.match(/ms/g) != null && myinterval.match(/ms/g)[0] == "ms"){
 			intrv = parseInt(myinterval);
-		}else if(myinterval.match(/s/g) == "s"){
+		}else if(myinterval.match(/s/g) != null && myinterval.match(/s/g)[0] == "s"){
 			intrv = parseInt(myinterval) * 1000;
 		}else{
-			intrv = 0;
+			parseInt(myinterval) ? intrv = parseInt(myinterval) : intrv = 0;
 		}
-		if(mydelay.match(/ms/g) == "ms"){
+		
+		if(mydelay.match(/ms/g) != null && mydelay.match(/ms/g)[0] == "ms"){
 			delay = parseInt(mydelay);
-		}else if(mydelay.match(/s/g) == "s"){
+		}else if(mydelay.match(/s/g) != null && mydelay.match(/s/g)[0] == "s"){
 			delay = parseInt(mydelay) * 1000;
 		}else{
-			delay = 0;
+			parseInt(mydelay) ? delay = parseInt(mydelay) : delay = 0;
 		}
 		
 		return parseInt(intrv) + parseInt(delay);
@@ -1068,7 +1166,7 @@ var __util = {
 	 *  CLEANING PREVIOUSLY USED STYLESHEETS.
 	 *  BASICALLY WHEN A FUNCTION CLEANED A CSS RULE, THE ANIMATING
 	 *  SLIDE WAS AFFECTED. SO IN ORDER TO CLEAN THE SLIDE WE HAVE TO:
-	 * ****************************************************************/
+	 *****************************************************************/
 	reStack : function(target,interval) //GET ALLOTED TIME FOR A TRANSITION
 										 //FINISH
 	{
@@ -1088,15 +1186,27 @@ var __util = {
 					document.getElementById("inertia-bgsheet").innerHTML = ""; // AND WE CLEAN CSS RULES
 				}
 			}
+			
 		},interval); //POOOOFFF!!!
 		
 	},
 	tool : function(){
+		
+		var pres		=		__util.Tget(inertiaObject.tags[1]),
+			canvas		=		new canvasConfig();
+			    
 		if(inertiaObject.showTool){
 			__util.get("#toolbar").style.opacity = "0";
+			
+			canvas.aspectRatio(pres[0],__util.Tget(inertiaObject.tags[3]),{"height":window.height});
+			
 			inertiaObject.showTool = false;
 		}else{
+			    
 			__util.get("#toolbar").style.opacity = "1";
+			
+			canvas.aspectRatio(pres[0],__util.Tget(inertiaObject.tags[3]),{"height":(parseInt(pres[0].style.height) - 50)});
+			
 			inertiaObject.showTool = true;
 			
 		}
@@ -1203,6 +1313,29 @@ var execAnimate = function(mytarget,background){
 	this.transintarget = mytarget;
 	
 	this.transinbackground = background != '' ? background : "#FFF";
+	//we need to do this because
+	//when we scale the slides...grids of spaces appear
+	//between animating panels inside the slides
+	//and its ugly
+	this.normalizeAfter = function(duration,tdelay){
+			var interval = 0,delay = 0;
+			if(typeof duration === "undefined"){
+				interval = 1000;
+			}else{
+				interval = duration;
+			}
+			if(typeof tdelay === "undefined"){
+				delay = 0;
+			}else{
+				delay = tdelay;
+			}
+			
+			time = __util.pTime(interval,delay);
+			setTimeout(function(){
+				__api(inertiaObject.mycurrentselection).getSlide().style.background = background;
+			},time);
+			
+	};
 	
 	this.$ = new __animationSheets();
 	
@@ -1250,10 +1383,10 @@ inertiaZoom.prototype.zoomify = function(targetChild, targetParent){
 				
 			if(mw > mh)
 			{
-			var compute = window.innerWidth;
+			var compute = window.innerHeight - ((mw - mh) / 2);
 			}else if(mw < mh)
 			{
-			var compute = window.innerHeight;
+			var compute = window.innerHeight - ((mh - mw) / 2);
 			}else{
 			//if it is a square...just use any :-)
 			//but i prefer height cause...just an intuition
@@ -1274,7 +1407,6 @@ inertiaZoom.prototype.zoomify = function(targetChild, targetParent){
 							__x(targetParent,"animationFillMode","forwards");
 							setTimeout(function(){
 								inertiaObject.zoomed = false;
-								//added 1.2.4
 								resetAnimations(targetParent);
 							},1000);
 						}else{
@@ -1355,15 +1487,14 @@ checkchild.prototype.animateChild = function()
 					var mychildAnimate 	=			new childAnimation(myid);
 					mychildAnimate[myanimation]();
 					
-					if(looping == 'undefined' || looping == null || looping == '')
+					if(typeof looping !== 'undefined' || looping != null || looping != '')
 					{
-					//do nothing
-					}else
-					{
-					setTimeout(function(){
-						var mychildAnimateLoop = new childAnimationLoop(myid);;
-						mychildAnimateLoop[looping]();
-					},1000);
+						setTimeout(function(){
+							var mychildAnimateLoop = new childAnimationLoop(myid);;
+							if(typeof mychildAnimateLoop[looping] == "function"){
+								mychildAnimateLoop[looping]();
+							}
+						},1000);
 					}
 					
 					if(this.mychild[count - 1]){
@@ -1372,7 +1503,9 @@ checkchild.prototype.animateChild = function()
 							
 							if(myanimateout != null)
 							{
-								var mychildAnimateOut 	=	new childAnimation(animateoutid);
+								
+								//var mychildAnimateOut 	=	new childAnimation(animateoutid);
+								var mychildAnimateOut 	=	new childAnimationOut(animateoutid);
 								mychildAnimateOut[myanimateout]();
 							}
 					}
@@ -1426,9 +1559,16 @@ var childAnimation = function(mytarget)
 	this.elemAnimate		=		this.mytargetchild;
 
 	this.$ = new __animationSheets();
-	
-
 		
+};
+var childAnimationOut = function(mytarget)
+{
+	this.childIndex			=		mytarget;
+	this.mytargetchild		=		__util.get("#"+this.childIndex);
+	this.elemAnimate		=		this.mytargetchild;
+
+	this.$ = new __animationSheets();
+
 };
 
 
@@ -1456,7 +1596,7 @@ checkimage.prototype.init = function(target,prev)
 	if(mycanvas[target])
 	{
 		if(mycanvas[target].getElementsByClassName("backgroundImage")[0]){
-			try{ var animatein = mycanvas[target].getElementsByClassName("backgroundImage")[0].getAttribute("imgin") }catch(err){ var animatein = undefined; }
+			try{ var animatein = mycanvas[target].getElementsByClassName("backgroundImage")[0].getAttribute("transition") }catch(err){ var animatein = undefined; }
 			if(animatein != undefined){
 					var mybgin = new checkBgAnim("mybg"+target,"mybg"+prev);
 					mybgin[animatein]();
@@ -1474,14 +1614,6 @@ checkimage.prototype.init = function(target,prev)
 			}
 		}
 	}
-	/*
-	try{ var animateout = mycanvas[myprev].getElementsByClassName("backgroundImage")[0].getAttribute("imgout") }catch(err){ var animateout = false; }
-	if(animateout != false){
-			var mybgout = new checkBgAnim("mybg"+myprev);
-			mybgout[animateout]();
-			
-	}
-	*/
 }
 
 /**this is the start of animation of background,
@@ -1648,6 +1780,7 @@ __transition.prototype = {
 				__x(mybgimagein,"animationDelay",objRule.incoming.bgDelay);
 				mybgimagein.style.display = 'block';
 				mybgimagein.style.opacity = '1';
+				console.log(objRule.incoming.bgDuration);
 			}
 			var mybgimageout = document.getElementById(objRule.outcoming.bg);
 			
@@ -1662,6 +1795,7 @@ __transition.prototype = {
 				__x(mybgimageout,"animationDelay",objRule.outcoming.bgDelay);
 				
 				var myinterval = __util.pTime(objRule.outcoming.bgDuration,objRule.outcoming.bgDelay);
+				console.log("interval="+myinterval);
 				console.log(myinterval);
 				setTimeout(function(){
 					mybgimageout.style.display = 'none';
@@ -1700,23 +1834,19 @@ __slideAnimation.prototype = {
 			setTimeout(function(){
 				var myanimate = new execAnimate(target,mybackground);
 				myanimate[ifpanelAnimate[0]]();
-				setTimeout(function(){
-					//fixing the grid error caused by divs by retrieving
-					//the initial background
-					__util.Tget(inertiaObject.tags[3])[target].style.background = ifpanelAnimate[1];
-				},2000);
 			},duration);
 		}
 	}
 }
 
 var __emptyBg = function(target,duration){
+	//this will clean all the style used in
+	//panel animation
 	setTimeout(function(){
 	__util.get("#inertia-panelsheet").innerHTML = "";
 	},duration);
 	__util.Tget(inertiaObject.tags[3])[target].getElementsByTagName("slide-background")[0].innerHTML = "";	
 	
-	//
 }
 
 
@@ -1771,8 +1901,12 @@ initializeResources.prototype.load = function(mytargetselection){
 					
 					var randomMe = Math.floor((Math.random()*10000)+1);
 					mycanvasResource[counter].setAttribute("id",randomMe);
-					mycanvasResource[counter].className += " " + "animate";
 					
+					if(mycanvasResource[counter].className.toString().match(/animate/)){
+						
+					}else{
+						mycanvasResource[counter].className += " " + "animate";
+					}
 					//reset all animation
 					resetAnimations(mycanvasResource[counter]);
 				}
@@ -1790,7 +1924,6 @@ var __x = function(target,property,value)
 	var fx			=		rawAgent.match("Firefox") ? true : false;
 	var cr			=		rawAgent.match("Chrome") ? true : false;
 	var o			=		rawAgent.match("Opera") ? true : false;
-	
 			
 	switch(property){
 		case "perspective":
@@ -1834,8 +1967,8 @@ var simulate3d = function()
 {
 		var viewer						=		__util.Tget(inertiaObject.tags[1])[0] != null ? __util.Tget(inertiaObject.tags[1])[0] : alert("Incomplete HTML : You must wrap all slides in 'presentation-view'");
 		viewer.style.position			=		"fixed";
-		viewer.style.width				=		"100%";
-		viewer.style.height				=		"100%";
+		viewer.style.width				=		window.innerWidth + "px";
+		viewer.style.height				=		window.innerHeight + "px";
 		viewer.style.top				=		"0px";
 		viewer.style.left				=		"0px";
 		__x(viewer,"perspective","1200px");
@@ -1846,47 +1979,17 @@ var simulate3d = function()
 
 //declare all extension
 
-var animationLoop = childAnimationLoop.prototype = {
-	/***********************************************
-	 * developers can extend this function using :
-	 * animationLoop.animationName = function(){
-	 *	//code here
-	 *}
-	 ***********************************************/
-}
+var animationLoop = childAnimationLoop.prototype = {};
 
-var contentAnimation = childAnimation.prototype = {
-	
-	
-}
+var contentAnimation = childAnimation.prototype = {};
 
-var panelAnimation = execAnimate.prototype = {
-	
-	
-}
+var contentAnimationOut = childAnimationOut.prototype = {};
 
-var backgroundAnimation = checkBgAnim.prototype = {
-	/***********************************************
-	 * developers can extend this function using :
-	 * backgroundAnimationStart.animationName = function(){
-	 *	//code here
-	 *}
-	 ***********************************************/
-}
+var panelAnimation = execAnimate.prototype = {};
 
-var canvasTransition = execTrans.prototype = {
-	/********************************************
-	so that developers can create extension using:
-	canvasTransition.hellohep = function(){
-	alert("yeah");
-	}
-	*********************************************/
-}
-/******************************************************
- *
- * WIDGET SECTION : TO DO
- *
- ******************************************************/
+var backgroundAnimation = checkBgAnim.prototype = {};
+
+var canvasTransition = execTrans.prototype = {};
 
 /******************************************************
  *
@@ -1910,15 +2013,17 @@ var elem = function(thisTarget){
 		var myparent = __util.Tget(inertiaObject.tags[3])[this.target];
 		if(mychild.match(/#/g) == "#")
 		{
-			var selector = mychild.replace(/#/,"");
+			var selector = mychild.replace(/^#/,"");
 			return document.getElementById(selector[1]);
 		}else
 		{
-			var selector = mychild.replace(/./,"");
+			var selector = mychild.replace(/^./,"");
 			return myparent.getElementsByClassName(selector);
 		}
 	}
 }
+
+
 
 
 
