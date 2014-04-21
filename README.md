@@ -3,6 +3,7 @@ inertia.js
 ==========
 
 a free open-source browser-based presentation using javascript, html5 and css3
+<a href='https://dl.dropboxusercontent.com/u/15594195/inertia.1.21.zip'>Download here</a>
 
 Demo
 ====
