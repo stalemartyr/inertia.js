@@ -1,0 +1,60 @@
+/*light theme*/
+body{
+	background-image:url('./images/noise.png');
+	background-color:yellowgreen;
+}
+
+slide{
+	background-color:#FFF;
+}
+
+presentation-title{
+	color:green;
+	font-size:50px;
+	padding:10px;
+	border:solid #FFF 3px;
+	text-shadow:0px 2px 5px #000;
+	font-family:'Open Sans', Verdana, Helvetica, sans-serif;
+}
+
+author{
+	color:yellowgreen;
+	padding:30px;
+	font-weight:bold;
+	font-family:'Open Sans', Verdana, Helvetica, sans-serif;
+}
+
+header{
+	margin:5px;
+	color:#424242;
+	font-family:arial;
+	font-weight:bold;
+}
+
+footer{
+	font-family:arial;
+	font-weight:bold;
+}
+
+header{
+	font-size:2em;
+	background:linear-gradient(to bottom, yellowgreen 40%,green 100%);
+	background:-webkit-linear-gradient(to bottom, yellowgreen 40%,green 100%);
+	background:-webkit-linear-gradient(yellowgreen,green);
+	padding:5px 20px;
+	display:inline-block;
+	color:#FFF;
+	text-shadow:0px 1px 2px #000;
+	position:relative;
+	top:-20px;
+	border:solid #FFF 2px;
+}
+
+footer{
+	text-align:right;
+	background:green;
+	color:#FFF;
+	padding:3px 0px;
+}
+
+

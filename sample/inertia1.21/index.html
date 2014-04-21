@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=0, initial-scale=1.0">
+		<meta charset="utf-8"></meta>
+		<script src="../../inertia.js/inertia.min.js"></script>
+		<script src="../../inertia.js/inertia.effects.min.js"></script>
+		<script src="js/theme-changer.js"></script>
+		<link type='text/css' rel='stylesheet' href='./css/inertia.core.css'></link>
+		<link type='text/css' rel='stylesheet' href='./theme/inertia.blue.css' id='mytheme'></link>
+		<link type='text/css' rel='stylesheet' href='./theme/inertia.custom.css'></link>
+		
+	</head>
+	
+	<body>
+		<presentation-view>
+			<slide>
+				<presentation-title>What is inertia.js?</presentation-title>
+				<author>Jim-Bert Amante</author>
+			</slide>
+			<slide>
+				<header>Inertia.js</header>
+				<h1>FREE!</h1>
+				<p class='resources' animatein='fadeins' animateout='h' blockflow='true'>It's a free opern-source software for building web-based presentation.</p>
+				<p class='resources' animatein='fadein'>It offers handful of effects and transitions. Hit right arrow button to explore.</p>
+				<p class='resources info' animatesequence='1' blockflow='true'>It offers handful of effects and transitions. Hit right arrow button to explore.</p>
+				<footer>Powered by inertia.js 1.21</footer>
+			</slide>
+			<slide>
+				<header>Themes</header>
+				<p>It offers costumizable themes</p>
+				<p>
+					<button onclick='light()'>Light</button>
+					<button onclick='light02()'>Light 2</button>
+					<button onclick='dark()'>dark</button>
+					<button onclick='green()'>green</button>
+					<button onclick='purple()'>purple</button>
+					<button onclick='blue()'>blue</button>
+				</p><br>
+				<p>...or create your own..the sky is the limit</p>
+				<footer>footer</footer>
+			</slide>
+			<slide>
+				<header>Features</header>
+				<h1>Tools</h1>
+				<p>Press 't' to show all the tools</p><br>
+				<h1>Curtain</h1>
+				<p>Presentation is too distracting and you need to turn it off for a while? hit 'b' button</p>
+				<br>
+				<h1>Zoom-in and out</h1>
+				<p>Presentation doesnt fit in browser? hit 'i' or 'o' button.</p>
+				<footer>Powered by inertia.js 1.21</footer>
+			</slide>
+			<slide>
+				<header>Features</header>
+				<h1>Click-to-Zoom</h1>
+					<img class='resources img2' animatein='fadein' animatesequence='0' src='./images/gt.png' zoom='true'>
+					<img class='resources hey' animatein='fadein' animatesequence='0' src='./images/youtube.png' zoom='true' width='100'>
+				
+			</slide>
+			<slide>
+				<header>Effects and Transitions</header>
+				<h1>Entrance</h1>
+				<p class='resources' animatein='fadein' animatesequence='0' blockflow='true'>Fade In</p>
+				<p class='resources' animatein='slidein' animatesequence='1' blockflow='true'>Slide In</p>
+				<p class='resources' animatein='slideinreverse' animatesequence='2' blockflow='true'>Slide In Reverse</p>
+				<p class='resources' animatein='hangin' animatesequence='3' blockflow='true'>Hang In</p>
+				<p class='resources' animatein='pulldown' animatesequence='4' blockflow='true'>Pull Down</p>
+				<p class='resources ' animatein='rotatein' animatesequence='5' blockflow='true'>Rotate In</p>
+				<p class='resources center' animatein='coolyin' animatesequence='6' blockflow='true'>Cooly In</p>
+				<p class='resources center' animatein='walkin' animatesequence='7' blockflow='true'>Walk In</p>
+				<br/><br/>
+				<h1>Animation after entrance</h1>
+				<p class='resources  center' animatein='fadein' animateloop='rotating1' animatesequence='8' blockflow='true'>Rotating 1</p>
+				<p class='resources  center' animatein='fadein' animateloop='rotating2' animatesequence='9' blockflow='true'>Rotating 2</p>
+				<p class='resources  center' animatein='fadein' animateloop='rotating3' animatesequence='10' blockflow='true'>Rotating 3</p>
+				<p class='resources  center' animatein='fadein' animateloop='rotating4' animatesequence='11' blockflow='true'>Rotating 4</p>
+				<p class='resources  center' animatein='fadein' animateloop='pulse' animatesequence='12' blockflow='true'>Pulse</p>
+				
+			</slide>
+			<slide>
+				<header>Effects and Transitions</header>
+				<h1>Animating out</h1>
+				<p class='resources  center' animatein='fadein' animateout='fadeout' animatesequence='0' blockflow='true'>Fade Out (i'll animate when the second text appear)</p>
+				<p class='resources  center' animatein='fadein' animateout='slideoutright' animatesequence='1' blockflow='true'>Slide-out Right</p>
+				<p class='resources  center' animatein='fadein' animateout='slideoutleft' animatesequence='2' blockflow='true'>Slide-out Left</p>
+				<p class='resources  center' animatein='fadein' animatesequence='3' blockflow='true'>*More to come :-)</p>
+				<h1>Simultaneous Animation</h1>
+				<p class='resources  center' animatein='fadein' animateloop='pulse' animatesequence='4' blockflow='true'>Pulse</p>
+				<p class='resources  center' animatein='slidein' animateloop='rotating2' animatesequence='4' blockflow='true'>Pulse</p>
+				<p class='resources  center' animatein='slideinreverse' animateloop='rotating3' animatesequence='4' blockflow='true'>Pulse</p>
+				
+			</slide>
+			<slide transition='transfadeinrotateout' animate='sliced3x3:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Trans-Fade-In-Rotate-Out</h1>
+				<h1>Panel Animation : Sliced 3 x 3 </h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='transfadeout' animate='enlarge3x3:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Trans-Fade-Out</h1>
+				<h1>Panel Animation : Enlarge 3 x 3 </h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='mycube' animate='fly3x3:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Cube</h1>
+				<h1>Panel Animation : Fly 3 x 3 </h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='replace' animate='card3x3:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Replace</h1>
+				<h1>Panel Animation : Card 3x3 </h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='fast' animate='fly3x3d:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Fast</h1>
+				<h1>Panel Animation : Fly 3 x 3 3d</h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='slideallleft' animate='fly3x3:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Slide All Left</h1>
+				<h1>Panel Animation : Fly 3 x 3 </h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='fullrotate' animate='fly3x3dreverse:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Full Rotate</h1>
+				<h1>Panel Animation : Fly 3 x 3 3d reverse</h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide transition='spidey' animate='flowfrombelow:#FFF'>
+				<header>Slide Transition and Panel Animation</header>
+				<h1>Transition : Spidey</h1>
+				<h1>Panel Animation : Flow from below</h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+			<slide>
+				<header>Background Image with Effects</header>
+				<h1>Transition : Fade In-Out</h1>
+				<p>Continue clicking the arrow button</p>
+				<div class='backgroundImage' imgsrc='./backgrounds/fx.jpg'></div>
+			</slide>
+			<slide>
+				<header>Background Image with Effects</header>
+				<h1>Transition : Slide All</h1>
+				<p>Continue clicking the arrow button</p>
+				<div class='backgroundImage' imgsrc='./backgrounds/inertia.jpg' transition='slideall'></div>
+			</slide>
+			<slide animate='fly3x3dreverse:url(./backgrounds/fx.jpg)'>
+				<header>Panel with background image</header>
+				<h1>Transition : Fly 3x3 3d reverse</h1>
+				<p>Continue clicking the arrow button</p>
+			</slide>
+		</presentation-view>
+	</body>
+</html>
