@@ -1,5 +1,0 @@
-Inertia v1 beta
-
-API
-__api(n).getSlide() --> where n is the slide number...return slide element
-					--> ex. __api(8).getSlide().style.background --> return "#FFF"
