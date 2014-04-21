@@ -6,6 +6,12 @@ a free open-source browser-based presentation using javascript, html5 and css3
 
 Demo
 ====
+<b>version 1.21</b>
+
+1. https://dl.dropboxusercontent.com/u/15594195/inertia.v1.21.sample/index.html
+
+<b>version 1.19</b>
+
 1. https://dl.dropboxusercontent.com/u/15594195/inertia.v1.19/index.html#0 <br/>
 2. https://dl.dropboxusercontent.com/u/15594195/inertia.v.19.sample/index.html#0<br/>
 3. https://dl.dropboxusercontent.com/u/15594195/bssw/index.html#0
