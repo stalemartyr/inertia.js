@@ -1,0 +1,43 @@
+/*light theme*/
+body{
+	background-color:#c553c1;
+	box-shadow:inset 0px 2px 20px #000;
+}
+
+
+header,footer{
+	color:#6b0062;
+	font-family:arial;
+	font-weight:bold;
+}
+
+header{
+	font-size:2em;
+	background:linear-gradient(to bottom, #ffc3fa 40%,#fb56ed 100%);
+	background:-webkit-linear-gradient(to bottom, #ffc3fa 40%,#fb56ed 100%);
+	background:-webkit-linear-gradient(#ffc3fa,#fb56ed);
+	padding:5px 20px;
+	border-bottom:solid #FFF 3px;
+}
+
+footer{
+text-align:right;
+background:#a50898;
+color:#fbaaf4 !important;
+}
+
+
+presentation-title{
+	color:#6b0062;
+	text-shadow:0px 1px 0px gray;
+}
+
+slide{
+	background-color:#E5E5E5;
+}
+
+h1,h2,h3,h4,h5,h6{
+	color:#6b0062;
+}
+
+

@@ -1,0 +1,40 @@
+/*light theme*/
+body{
+	background-color:#fff;
+	background-image: url('./images/noise.png'),url('./images/inertia-bg.png');
+	box-shadow:inset 0px 2px 20px #000;
+}
+
+
+header,footer{
+	color:#6c6c6c;
+	font-family:arial;
+	font-weight:bold;
+}
+
+header{
+	font-size:2em;
+	padding:5px 20px;
+	border-bottom: dashed #424242 1px;
+}
+
+footer{
+	text-align:right;
+	border-top: dashed #424242 1px;
+}
+
+
+presentation-title{
+	color:#424242;
+	text-shadow:0px 1px 0px #424242;
+}
+
+slide{
+	background-color:#E5E5E5;
+}
+
+h1,h2,h3,h4,h5,h6{
+	color:#686969;
+}
+
+
